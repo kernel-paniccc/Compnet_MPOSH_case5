@@ -17,7 +17,6 @@ def main():
 def account():
     try:
         applet = Aplications.query.filter_by(user_id=current_user.id).all()
-        print([i.id for i in applet])
     except Exception as e:
         applet = []
     return render_template("account.html", username=current_user.username, applications=applet)
@@ -30,18 +29,32 @@ def main_application():
 
     if request.method == 'POST':
         id = request.form.get('item_id')
-        item = InventoryItem.query.filter_by(id=id).all()
+        count = request.form.get('value')
+        item = InventoryItem.query.filter_by(id=id).first()
         if id and item:
-            status = "not accepted"
-            new_application = Aplications(user_id=current_user.id, name=current_user.username, item_id=id, status=status)
             try:
-                db.session.add(new_application)
-                db.session.commit()
-                flash("Заявка добавлена", category='success')
+                count_int = int(count)
+                if 0 < count_int < item.quantity:
+                    status = "not accepted"
+                    new_application = Aplications(
+                        user_id=current_user.id,
+                        name=current_user.username,
+                        item_id=id,
+                        status=status,
+                        count=count_int
+                    )
+                    db.session.add(new_application)
+                    db.session.commit()
+                    flash("Заявка добавлена", category='success')
+                else:
+                    flash("Слишком большое значение", category='error')
+            except ValueError:
+                flash("Некорректное значение для количества", category='error')
             except Exception as e:
-                flash("ID элемента не найден", category='error')
+                print(e)
         else:
             flash("ID элемента не найден", category='error')
+
     return render_template('applications.html', items=items)
 
 

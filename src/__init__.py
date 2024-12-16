@@ -2,6 +2,8 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 import base64
+from flask_migrate import Migrate
+
 
 app = Flask(__name__)
 app.secret_key = base64.b64encode('SUPER_KEY'.encode()).decode()
@@ -10,6 +12,8 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
 manager = LoginManager(app)
+
+migrate = Migrate(app, db)
 
 from src import models, routers
 

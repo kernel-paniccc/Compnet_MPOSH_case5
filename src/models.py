@@ -28,6 +28,7 @@ class InventoryItem(db.Model):
 class Aplications(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, nullable=False)
+    count = db.Column(db.Integer, nullable=False)
     name = db.Column(db.String(128), nullable=False)
     status = db.Column(db.String(50), nullable=False)
     item_id = db.Column(db.Integer, default=0)
