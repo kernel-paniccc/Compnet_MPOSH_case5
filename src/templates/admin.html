@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container-fluid text-center">
+      <div class="row align-items-start">
+          <div class="row gy-4">
+              <h1 style="font-size: 70px" class="main_text">
+                  Admin panel
+              </h1>
+          </div>
+      </div>
+  </div>
+
+<div class="container-fluid text-center">
+  <div class="row text-justify-center">
+      <div class="col-md-6 offset-md-3">
+          <br>
+          <div class="d-grid gap-2">
+              <a class="btn btn-dark" style="color: aquamarine; border: 3px solid aquamarine;
+                font-family: 'Archivo Black';" href="/admin/inventory_add" role="button">Add item</a>
+          </div>
+
+      </div>
+  </div>
+</div>
+
+
+<div class="container-fluid text-center">
+  <div class="row text-justify-center">
+      <div class="col-md-6 offset-md-3">
+          <br>
+          <div class="d-grid gap-2">
+              <a class="btn btn-dark" style="color: aquamarine; border: 3px solid aquamarine;
+                font-family: 'Archivo Black';" href="/admin/all_item" role="button">All items</a>
+          </div>
+      </div>
+  </div>
+</div>
+
+
+  <script src="../static/script_for_flash.js"></script>
+{% endblock %}
