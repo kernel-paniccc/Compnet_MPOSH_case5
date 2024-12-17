@@ -3,57 +3,59 @@
 {% block content %}
 
 <div class="container-fluid text-center">
-      <div class="row align-items-start">
-          <div class="row gy-4">
-              <h1 style="font-size: 70px" class="main_text">
-                  {{username}} applications
-              </h1>
-          </div>
-      </div>
-  </div>
-
-        <div class="container-fluid mt-5">
-    <div class="row justify-content-center">
-    <div class="col-6">
-    <br><br>
-        <table class="table table-borderless">
-          <thead>
-            <tr>
-                <th class="main_text" style="color: aquamarine" scope="col"><h3>ID</h3></th>
-                <th class="main_text" style="color: aquamarine" scope="col"><h3>Name</h3></th>
-                <th class="main_text" style="color: aquamarine" scope="col"><h3>Status</h3></th>
-                <th class="main_text" style="color: aquamarine" scope="col"><h3>Item</h3></th>
-                <th class="main_text" style="color: aquamarine" scope="col"><h3>Count</h3></th>
-
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-                {% for app in applications %}
-                    <td>{{ app.id }}</td>
-                    <td>{{ app.name }}</td>
-                    <td>{{ app.status }}</td>
-                    <td>{{ app.item_id }}</td>
-                    <td>{{ app.count }}</td>
-            </tr>
-          {% endfor %}
-          </tbody>
-        </table>
-    </div>
-    </div>
-    </div>
-
-
-
-    <div class="container mt-5 text-center">
-        <div class="row justify-content-center">
-        <div class="col-md-6">
-    {% for cat, msg in get_flashed_messages(True) %}
-        <div id ="popup" class="flash {{cat}}"><h3><b>{{msg}}</b></h3></div>
-    {% endfor %}
+    <div class="row align-items-start">
+        <div class="row gy-4">
+            <h1 style="font-size: 70px" class="main_text">
+                {{username}} applications
+            </h1>
         </div>
     </div>
 </div>
 
-    <script src="../static/script_for_flash.js"></script>
+<div class="container-fluid mt-5">
+    <div class="row justify-content-center">
+        <div class="col-6">
+            <br><br>
+            <table class="table table-borderless">
+                <thead>
+                    <tr>
+                        <th class="main_text" style="color: aquamarine" scope="col"><h3>ID</h3></th>
+                        <th class="main_text" style="color: aquamarine" scope="col"><h3>Name</h3></th>
+                        <th class="main_text" style="color: aquamarine" scope="col"><h3>Status</h3></th>
+                        <th class="main_text" style="color: aquamarine" scope="col"><h3>Item</h3></th>
+                        <th class="main_text" style="color: aquamarine" scope="col"><h3>Count</h3></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for app in applications %}
+                    <tr>
+                        <td>{{ app.id }}</td>
+                        <td>{{ app.name }}</td>
+                        <td
+                            {% if app.status == 'not accepted' %}style="color: red;"
+                            {% elif app.status == 'accepted' %}style="color: lime;"
+                            {% endif %}>
+                            {{ app.status }}
+                        </td>
+                        <td>{{ app.item_id }}</td>
+                        <td>{{ app.count }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-5 text-center">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            {% for cat, msg in get_flashed_messages(True) %}
+            <div id ="popup" class="flash {{cat}}"><h3><b>{{msg}}</b></h3></div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script src="../static/script_for_flash.js"></script>
 {% endblock %}

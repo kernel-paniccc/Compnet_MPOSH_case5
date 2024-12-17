@@ -6,7 +6,7 @@
       <div class="row align-items-start">
           <div class="row gy-4">
               <h1 style="font-size: 70px" class="main_text">
-                  All inventory items
+                  All applications
               </h1>
           </div>
       </div>
@@ -20,27 +20,35 @@
         <table class="table table-borderless">
           <thead>
             <tr>
-                <th class="main_text" style="color: aquamarine" scope="col"><h3>Item ID</h3></th>
+                <th class="main_text" style="color: aquamarine" scope="col"><h3>ID</h3></th>
+                <th class="main_text" style="color: aquamarine" scope="col"><h3>User ID</h3></th>
                 <th class="main_text" style="color: aquamarine" scope="col"><h3>Name</h3></th>
-                <th class="main_text" style="color: aquamarine" scope="col"><h3>Quantity</h3></th>
+                <th class="main_text" style="color: aquamarine" scope="col"><h3>Count</h3></th>
                 <th class="main_text" style="color: aquamarine" scope="col"><h3>Status</h3></th>
-                <th class="main_text" style="color: aquamarine" scope="col"><h3>User Get</h3></th>
+                <th class="main_text" style="color: aquamarine" scope="col"><h3>Item ID</h3></th>
 
             </tr>
           </thead>
           <tbody>
             <tr>
-                {% for item in items %}
+                {% for app in applets %}
 
-                    <td><a style="color: aquamarine" href='/admin/edit/{{item.id}}'>
-                            {{ item.id }}</a></td>
-                    <td>{{ item.name }}</td>
-                    <td>{{ item.quantity }}</td>
-                    <td>{{ item.status }}</td>
-                    <td>{{ item.user_id }}</td>
+                    <td>{{ app.id }}</td>
+                    <td>{{ app.user_id }}</td>
+                    <td>{{ app.name }}</td>
+                    <td>{{ app.count }}</td>
+                    <td
+                        {% if app.status == 'not accepted' %}style="color: red;"
+                        {% elif app.status == 'accepted' %}style="color: lime;"
+                        {% endif %}>
+                        <a href='/admin/edit_applet_status/{{ app.id }}' style="color: inherit; text-decoration: none;">
+                            {{ app.status }}
+                        </a>
+                    </td>
+                    <td>{{ app.item_id }}</td>
                 <td>
                     <a  type="button" class="btn-close" aria-label="Close"
-                        href="{{ url_for('delited', item_id=item.id) }}" >
+                        href="{{ url_for('delited_applet', applet_id=app.id) }}">
                     </a>
                     </td>
             </tr>

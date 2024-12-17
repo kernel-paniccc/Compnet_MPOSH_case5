@@ -26,7 +26,6 @@ def account():
 @login_required
 def main_application():
     items = InventoryItem.query.filter_by(user_id=0).all()
-
     if request.method == 'POST':
         id = request.form.get('item_id')
         count = request.form.get('value')
@@ -61,16 +60,20 @@ def main_application():
 @app.route('/admin', methods=['GET', 'POST'])
 @login_required
 def admin_panel():
-    if not current_user.is_admin():
-        return redirect('/')
+    if not current_user.is_admin(): return redirect('/')
     return render_template('admin.html')
+
+@app.route('/admin/get_user_applet', methods=['GET', 'POST'])
+def get_user_applet():
+    if not current_user.is_admin(): return redirect('/')
+    applet = Aplications.query.all()
+    return render_template('get_user_applet.html', applets=applet)
 
 
 @app.route('/admin/inventory_add', methods=['GET', 'POST'])
 @login_required
 def add_inventory_item():
-    if not current_user.is_admin():
-        return redirect('/')
+    if not current_user.is_admin(): return redirect('/')
     if request.method == 'POST':
         name = request.form['name']
         quantity = request.form['quantity']
@@ -85,11 +88,68 @@ def add_inventory_item():
 @app.route('/admin/all_item', methods=['GET', 'POST'])
 @login_required
 def all_inventory_item():
-    if not current_user.is_admin():
-        return redirect('/')
+    if not current_user.is_admin(): return redirect('/')
     items = InventoryItem.query.all()
 
     return render_template('all_items.html', items=items)
+
+@app.route('/admin/del_applet/<int:applet_id>')
+def delited_applet(applet_id):
+    if not current_user.is_admin(): return redirect('/')
+    item = Aplications.query.get(applet_id)
+    if item:
+        db.session.delete(item)
+        db.session.commit()
+        flash('Запись удалена', 'success')
+    else:
+        flash('Запись не найдена', 'error')
+    return redirect('/admin/get_user_applet')
+
+
+@app.route('/admin/edit_applet_status/<int:applet_id>', methods=['GET', 'POST'])
+@login_required
+def edit_applet(applet_id):
+    if not current_user.is_admin():
+        return redirect('/')
+    applet = Aplications.query.get(applet_id)
+    if not applet:
+        return redirect('/admin/all_applet')
+    if request.method == 'POST':
+        new_status = request.form['status']
+        if applet.status != new_status:
+            if new_status == 'not accepted':
+                item = InventoryItem.query.get(applet.item_id)
+                if item:
+                    item.quantity += applet.count
+                    flash(f'Количество для {item.name} увеличено на {applet.count}', 'success')
+            applet.status = new_status
+            db.session.commit()
+            return redirect('/refreash_database')
+        else: return redirect('/admin/get_user_applet')
+    return render_template('edit_applet.html', app=applet)
+
+
+@app.route('/refreash_database', methods=['GET', 'POST'])
+@login_required
+def refreash_database():
+    if not current_user.is_admin():
+        return redirect('/')
+    applets = Aplications.query.all()
+    for applet in applets:
+        if applet.status == 'accepted':
+            item = InventoryItem.query.get(applet.item_id)
+            if item:
+                if item.quantity >= applet.count:
+                    item.quantity -= applet.count
+                    item.user_id = applet.user_id
+                    flash(f'Количество для {item.name} уменьшено на {applet.count}', 'success')
+                else:
+                    flash(f'Недостаточно количества для {item.name}', 'error')
+                    applet.status = 'not accepted'
+            else:
+                flash(f'Товар с ID {applet.item_id} не найден', 'error')
+    db.session.commit()
+    return redirect('/admin/get_user_applet')
 
 
 @app.route('/del/<int:item_id>')
@@ -98,14 +158,16 @@ def delited(item_id):
     if not current_user.is_admin():
         return redirect('/')
     item = InventoryItem.query.get(item_id)
+    applets = Aplications.query.filter_by(item_id=item_id).all()
     if item:
+        for applet in applets:
+            db.session.delete(applet)
         db.session.delete(item)
         db.session.commit()
         flash('Запись удалена', 'success')
     else:
         flash('Запись не найдена', 'error')
     return redirect('/admin/all_item')
-
 
 @app.route('/admin/edit/<int:item_edit_id>', methods=['GET', 'POST'])
 @login_required
