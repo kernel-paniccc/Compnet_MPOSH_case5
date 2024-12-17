@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buy app</title>
+    <title>Buy list</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
@@ -80,10 +80,10 @@
             <tbody>
                 {% for task in tasks %}
                 <tr>
-                    <td>{{ task.name }}</td>
-                    <td>{{ task.quantity }}</td>
-                    <td>{{ task.price }}</td>
-                    <td>{{ task.supplier }}</td>
+                    <td style="color: white">{{ task.name }}</td>
+                    <td style="color: white">{{ task.quantity }}</td>
+                    <td style="color: white">{{ task.price }}</td>
+                    <td style="color: white">{{ task.supplier }}</td>
                     <td>
                         <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editModal{{ task.id }}">
                                                         Изменить

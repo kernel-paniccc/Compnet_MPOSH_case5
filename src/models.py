@@ -2,7 +2,7 @@ from functools import wraps
 
 from flask import flash, redirect
 from flask_login import UserMixin, current_user
-from src import db, manager, app
+from src import db, manager
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -35,6 +35,7 @@ class Aplications(db.Model):
     name = db.Column(db.String(128), nullable=False)
     status = db.Column(db.String(50), nullable=False)
     item_id = db.Column(db.Integer, default=0)
+
 
     def __repr__(self):
         return f'<InventoryItem {self.name} (Quantity: {self.quantity}, Status: {self.status})>'

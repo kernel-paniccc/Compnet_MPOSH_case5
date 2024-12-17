@@ -1,5 +1,5 @@
 from flask import request, render_template, redirect, flash
-from flask_login import login_required, current_user
+from flask_login import login_required
 from src import app, db
 from src.models import InventoryItem, Aplications, admin_required
 
@@ -70,34 +70,40 @@ def edit_applet(applet_id):
                 if item:
                     item.quantity += applet.count
                     flash(f'Количество для {item.name} увеличено на {applet.count}', 'success')
-                    item.user_id = 0
+            if new_status == 'accepted':
+                item = InventoryItem.query.get(applet.item_id)
+                if item:
+                    if item.quantity >= applet.count:
+                        item.quantity -= applet.count
+                        flash(f'Количество для {item.name} уменьшено на {applet.count}', 'success')
+                    else:
+                        flash(f'Недостаточно количества для {item.name}', 'error')
+                        applet.status = 'not accepted'
             applet.status = new_status
             db.session.commit()
-            return redirect('/admin/refreash_database')
-        else: return redirect('/admin/get_user_applet')
+            return redirect('/admin/get_user_applet')
     return render_template('edit_applet.html', app=applet)
 
 
-@app.route('/admin/refreash_database', methods=['GET', 'POST'])
-@login_required
-@admin_required
-def refreash_database():
-    applets = Aplications.query.all()
-    for applet in applets:
-        if applet.status == 'accepted':
-            item = InventoryItem.query.get(applet.item_id)
-            if item:
-                if item.quantity >= applet.count:
-                    item.quantity -= applet.count
-                    item.user_id = applet.user_id
-                    flash(f'Количество для {item.name} уменьшено на {applet.count}', 'success')
-                else:
-                    flash(f'Недостаточно количества для {item.name}', 'error')
-                    applet.status = 'not accepted'
-            else:
-                flash(f'Товар с ID {applet.item_id} не найден', 'error')
-    db.session.commit()
-    return redirect('/admin/get_user_applet')
+# @app.route('/admin/refreash_database', methods=['GET', 'POST'])
+# @login_required
+# @admin_required
+# def refreash_database():
+#     applets = Aplications.query.all()
+#     for applet in applets:
+#         if applet.status == 'accepted':
+#             item = InventoryItem.query.get(applet.item_id)
+#             if item:
+#                 if item.quantity >= applet.count:
+#                     item.quantity -= applet.count
+#                     flash(f'Количество для {item.name} уменьшено на {applet.count}', 'success')
+#                 else:
+#                     flash(f'Недостаточно количества для {item.name}', 'error')
+#                     applet.status = 'not accepted'
+#             else:
+#                 flash(f'Товар с ID {applet.item_id} не найден', 'error')
+#     db.session.commit()
+#     return redirect('/admin/get_user_applet')
 
 
 @app.route('/admin/del/<int:item_id>')
