@@ -6,16 +6,19 @@ from flask_migrate import Migrate
 
 
 app = Flask(__name__)
+
 app.secret_key = base64.b64encode('SUPER_KEY'.encode()).decode()
+
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///auth.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
+
 manager = LoginManager(app)
 
 migrate = Migrate(app, db)
 
-from src import models, routers
+from src import models, routers, buy_routers, admin_routers
 
 @app.before_request
 def create_tables():

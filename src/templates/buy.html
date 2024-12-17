@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buy app</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #121212; /* Темный фон */
+            color: #ffffff; /* Белый текст */
+        }
+        .table {
+            background-color: #1e1e1e; /* Темный фон таблицы */
+        }
+        .table th {
+            background-color: #212529; /* Темный фон заголовков таблицы */
+            color: #ffffff; /* Белый текст заголовков */
+        }
+        .form-control {
+            background-color: #2a2a2a; /* Темный фон полей ввода */
+            color: #ffffff; /* Белый текст полей ввода */
+        }
+        .form-control:focus {
+            background-color: #4a4a4a; /* Более светлый фон при фокусе */
+            color: #ffffff; /* Белый текст при фокусе */
+            border-color: #80bdff; /* Цвет границы при фокусе */
+        }
+        .btn-primary {
+            background-color: #007bff; /* Цвет кнопки "Добавить" */
+            border-color: #007bff; /* Цвет границы кнопки "Добавить" */
+        }
+        .btn-primary:hover {
+            background-color: #0056b3; /* Цвет кнопки "Добавить" при наведении */
+        }
+        .btn-warning {
+            background-color: #ffc107; /* Цвет кнопки "Изменить" */
+            border-color: #ffc107; /* Цвет границы кнопки "Изменить" */
+        }
+        .btn-danger {
+            background-color: #dc3545; /* Цвет кнопки "Удалить" */
+            border-color: #dc3545; /* Цвет границы кнопки "Удалить" */
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 style="color:aquamarine;" class="text-center">Планирование и управление закупками </h1>
+        <br>
+        <form action="/buy/add" method="POST" class="mb-4">
+            <div class="form-row">
+                <div class="col">
+                    <input type="text" name="task_name" class="form-control" placeholder="Название предмета" required>
+                </div>
+                <div class="col">
+                    <input type="number" name="quantity" class="form-control" placeholder="Количество" required>
+                </div>
+                <div class="col">
+                    <input type="number" name="price" class="form-control" placeholder="Цена" required>
+                </div>
+                <div class="col">
+                    <input type="text" name="supplier" class="form-control" placeholder="Поставщик" required>
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary">Добавить</button>
+                </div>
+            </div>
+        </form>
+
+        <table class="table table-bordered">
+            <thead class="thead-light">
+                <tr>
+                    <th>Название</th>
+                    <th>Количество</th>
+                    <th>Цена</th>
+                    <th>Поставщик</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for task in tasks %}
+                <tr>
+                    <td>{{ task.name }}</td>
+                    <td>{{ task.quantity }}</td>
+                    <td>{{ task.price }}</td>
+                    <td>{{ task.supplier }}</td>
+                    <td>
+                        <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editModal{{ task.id }}">
+                                                        Изменить
+                        </button>
+
+                        <div class="modal fade" id="editModal{{ task.id }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel{{ task.id }}" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="editModalLabel{{ task.id }}">Редактировать задачу</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Закрыть">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <form action="/buy/edit/{{ task.id }}" method="POST">
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <label for="task_name">Название предмета</label>
+                                                <input type="text" name="task_name" value="{{ task.name }}" class="form-control" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="quantity">Количество</label>
+                                                <input type="number" name="quantity" value="{{ task.quantity }}" class="form-control" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="price">Цена</label>
+                                                <input type="number" name="price" value="{{ task.price }}" class="form-control" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="supplier">Поставщик</label>
+                                                <input type="text" name="supplier" value="{{ task.supplier }}" class="form-control" required>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                                            <button type="submit" class="btn btn-warning">Сохранить изменения</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Форма для удаления задачи -->
+                        <form action="/buy/delete/{{ task.id }}" method="POST" style="display:inline;">
+                            <button type="submit" class="btn btn-danger btn-sm">Удалить</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Подключение Bootstrap JS и jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
