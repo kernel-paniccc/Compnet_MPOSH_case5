@@ -1,9 +1,10 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
-import base64
+from flask_ngrok import run_with_ngrok
 from flask_migrate import Migrate
-import logging
+from dotenv import load_dotenv
+import logging, base64, os
 
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s - %(levelname)s - %(message)s',
@@ -14,8 +15,11 @@ logging.basicConfig(level=logging.INFO,
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
 
+load_dotenv()
 
 app = Flask(__name__)
+# app.secret_key = os.getenv("TOKEN")
+# run_with_ngrok(app)
 
 app.secret_key = base64.b64encode('SUPER_KEY'.encode()).decode()
 
@@ -25,6 +29,8 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 
 manager = LoginManager(app)
+manager.init_app(app)
+manager.login_view = 'login'
 
 migrate = Migrate(app, db)
 
