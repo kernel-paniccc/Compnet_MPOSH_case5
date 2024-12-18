@@ -141,5 +141,17 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <div class="container mt-5 text-center">
+        <div class="row justify-content-center">
+        <div class="col-md-6">
+    {% for cat, msg in get_flashed_messages(True) %}
+        <div id ="popup" class="flash {{cat}}"><h3><b>{{msg}}</b></h3></div>
+    {% endfor %}
+        </div>
+    </div>
+</div>
+
+    <script src="../static/script_for_flash.js"></script>
 </body>
 </html>

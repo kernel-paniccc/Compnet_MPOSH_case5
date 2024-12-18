@@ -41,17 +41,52 @@
                         {% if app.status == 'not accepted' %}style="color: red;"
                         {% elif app.status == 'accepted' %}style="color: lime;"
                         {% endif %}>
-                        <a href='/admin/edit_applet_status/{{ app.id }}' style="color: inherit; text-decoration: none;">
+                        <a style="color: inherit; text-decoration: none;">
                             {{ app.status }}
                         </a>
                     </td>
                     <td>{{ app.item_id }}</td>
+                <td>
+                     <button  type="button" class="btn btn-outline-secondary btn-sm" data-toggle="modal" data-target="#editModal{{ app.id }}">
+                        <i class="bi bi-pencil"></i>
+                    </button>
+                </td>
                 <td>
                     <a  type="button" class="btn-close" aria-label="Close"
                         href="{{ url_for('delited_applet', applet_id=app.id) }}">
                     </a>
                     </td>
             </tr>
+
+             <div class="modal fade" id="editModal{{ app.id }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel{{ app.id }}" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="editModalLabel{{ app.id }}" style="color: aquamarine; font-family: 'Archivo Black'; text-shadow: 0 0 10px">
+                        Edit ID: {{ app.id }}
+                                    </h5>
+                                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Закрыть">
+                                            <span aria-hidden="true"></span>
+                                        </button>
+                                </div>
+                                <form action="{{ url_for('edit_applet', applet_id=app.id) }}" method="POST">
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <label for="status" style="color: aquamarine;"><b>status</b></label>
+                                                <select class="form-select" aria-label="Default select example" name="status">
+                                                    <option value="not accepted" {% if app.status == 'not accepted' %}selected{% endif %}>not accepted</option>
+                                                    <option value="accepted" {% if app.status == 'accepted' %}selected{% endif %}>accepted</option>
+                                                </select>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-outline-secondary">Сохранить изменения</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
           {% endfor %}
           </tbody>
         </table>
@@ -59,6 +94,9 @@
     </div>
     </div>
 
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 
     <div class="container mt-5 text-center">

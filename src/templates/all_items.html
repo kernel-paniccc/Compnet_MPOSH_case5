@@ -3,65 +3,106 @@
 {% block content %}
 
 <div class="container-fluid text-center">
-      <div class="row align-items-start">
-          <div class="row gy-4">
-              <h1 style="font-size: 70px" class="main_text">
-                  All inventory items
-              </h1>
-          </div>
-      </div>
-  </div>
-
-
-        <div class="container-fluid mt-5">
-    <div class="row justify-content-center">
-    <div class="col-6">
-    <br><br>
-        <table class="table table-borderless">
-          <thead>
-            <tr>
-                <th class="main_text" style="color: aquamarine" scope="col"><h3>Item ID</h3></th>
-                <th class="main_text" style="color: aquamarine" scope="col"><h3>Name</h3></th>
-                <th class="main_text" style="color: aquamarine" scope="col"><h3>Quantity</h3></th>
-                <th class="main_text" style="color: aquamarine" scope="col"><h3>Status</h3></th>
-                <th class="main_text" style="color: aquamarine" scope="col"><h3>User Get</h3></th>
-
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-                {% for item in items %}
-
-                    <td><a style="color: aquamarine" href='/admin/edit/{{item.id}}'>
-                            {{ item.id }}</a></td>
-                    <td>{{ item.name }}</td>
-                    <td>{{ item.quantity }}</td>
-                    <td>{{ item.status }}</td>
-                    <td>{{ item.user_id }}</td>
-                <td>
-                    <a  type="button" class="btn-close" aria-label="Close"
-                        href="{{ url_for('delited', item_id=item.id) }}" >
-                    </a>
-                    </td>
-            </tr>
-          {% endfor %}
-          </tbody>
-        </table>
-    </div>
-    </div>
-    </div>
-
-
-
-    <div class="container mt-5 text-center">
-        <div class="row justify-content-center">
-        <div class="col-md-6">
-    {% for cat, msg in get_flashed_messages(True) %}
-        <div id ="popup" class="flash {{cat}}"><h3><b>{{msg}}</b></h3></div>
-    {% endfor %}
+    <div class="row align-items-start">
+        <div class="row gy-4">
+            <h1 style="font-size: 70px" class="main_text">All inventory items</h1>
         </div>
     </div>
 </div>
 
-    <script src="../static/script_for_flash.js"></script>
+<div class="container-fluid mt-5">
+    <div class="row justify-content-center">
+        <div class="col-8">
+            <br><br>
+            <table class="table table-borderless">
+                <thead>
+                    <tr>
+                        <th class="main_text" style="color: aquamarine" scope="col"><h3>Item ID</h3></th>
+                        <th class="main_text" style="color: aquamarine" scope="col"><h3>Name</h3></th>
+                        <th class="main_text" style="color: aquamarine" scope="col"><h3>Quantity</h3></th>
+                        <th class="main_text" style="color: aquamarine" scope="col"><h3>Status</h3></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
+                    <tr>
+                        <td>{{ item.id }}</td>
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>{{ item.status }}</td>
+                        <td>
+                             <button  type="button" class="btn btn-outline-secondary btn-sm" data-toggle="modal" data-target="#editModal{{ item.id }}">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                        </td>
+                        <td>
+                            <a type="button" class="btn-close" aria-label="Close" href="{{ url_for('delited', item_id=item.id) }}"></a>
+                        </td>
+                    </tr>
+
+                    <div class="modal fade" id="editModal{{ item.id }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel{{ item.id }}" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="editModalLabel{{ item.id }}" style="color: aquamarine; font-family: 'Archivo Black'; text-shadow: 0 0 10px">
+                        Edit ID: {{ item.id }} NAME: {{ item.name }}
+                                    </h5>
+                                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Закрыть">
+                                            <span aria-hidden="true"></span>
+                                        </button>
+                                </div>
+                                <form action="{{ url_for('edit_item', item_id=item.id) }}" method="POST">
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <label for="name{{ item.id }}" style="color: aquamarine;"><b>Name</b></label>
+                                            <input type="text" id="name{{ item.id }}" name="name" class="form-control" required value="{{ item.name }}">
+                                        </div>
+                                        <br>
+                                        <div class="form-group">
+                                            <label for="quantity{{ item.id }}" style="color: aquamarine;"><b>Quantity</b></label>
+                                            <input type="number" id="quantity{{ item.id }}" name="quantity" class="form-control" required value="{{ item.quantity }}">
+                                        </div>
+                                        <br>
+                                        <div class="form-group">
+                                                                                        <label for="status{{ item.id }}" style="color: aquamarine;"><b>Status</b></label>
+                                            <select class="form-select" name="status" required>
+                                                <option value="new" {% if item.status == 'new' %}selected{% endif %}>Новый</option>
+                                                <option value="used" {% if item.status == 'used' %}selected{% endif %}>Использованный</option>
+                                                <option value="broken" {% if item.status == 'broken' %}selected{% endif %}>Сломанный</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-outline-secondary">Сохранить изменения</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+<div class="container mt-5 text-center">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            {% for cat, msg in get_flashed_messages(True) %}
+                <div id ="popup" class="flash {{ cat }}"><h3><b>{{ msg }}</b></h3></div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script src="../static/script_for_flash.js"></script>
+
 {% endblock %}
+

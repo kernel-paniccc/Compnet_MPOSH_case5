@@ -3,6 +3,16 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 import base64
 from flask_migrate import Migrate
+import logging
+
+logging.basicConfig(level=logging.INFO,
+                    format='%(asctime)s - %(levelname)s - %(message)s',
+                    handlers=[
+                        logging.FileHandler("src/logs/app.log"),
+                        logging.StreamHandler()
+                    ])
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)
 
 
 app = Flask(__name__)
@@ -18,7 +28,7 @@ manager = LoginManager(app)
 
 migrate = Migrate(app, db)
 
-from src import models, routers, buy_routers, admin_routers
+from src import models, main_routers, buy_routers, admin_routers
 
 @app.before_request
 def create_tables():
