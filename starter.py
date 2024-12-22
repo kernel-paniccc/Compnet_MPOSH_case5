@@ -2,6 +2,9 @@ from threading import Thread
 from src import app
 import os
 
+with open("src/logs/app.log", 'w') as f:
+    f.write("")
+
 def run_tunnel():
     result = os.system('tuna http 8080')
 
