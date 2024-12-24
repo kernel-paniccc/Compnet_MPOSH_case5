@@ -58,7 +58,6 @@ def admin_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if not current_user.is_admin():
-            flash("У вас нет доступа к этой странице.", category='error')
             return redirect('/')
         return f(*args, **kwargs)
     return decorated_function

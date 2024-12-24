@@ -1,7 +1,7 @@
-from flask import request, render_template, redirect, flash, send_file
+from flask import render_template, request, redirect, flash, send_file
 from flask_login import login_required
+from src.models import Aplications, InventoryItem, admin_required
 from src import app, db
-from src.models import InventoryItem, Aplications, admin_required
 import logging
 
 @app.route('/admin', methods=['GET', 'POST'])
@@ -59,13 +59,6 @@ def delited_applet(applet_id):
     return redirect('/admin/get_user_applet')
 
 
-import logging
-from flask import render_template, request, redirect, flash
-from flask_login import login_required
-from src.models import Aplications, InventoryItem, admin_required
-from src import db
-
-
 @app.route('/admin/edit_applet_status/<int:applet_id>', methods=['GET', 'POST'])
 @login_required
 @admin_required
@@ -79,7 +72,7 @@ def edit_applet(applet_id):
         new_status = request.form['status']
         if applet.status != new_status:
             item = InventoryItem.query.get(applet.item_id)
-            if new_status == 'not accepted':
+            if new_status == 'not accepted' and applet.status !='return':
                 if item:
                     item.quantity += applet.count
                     logging.info(f"Количество для {item.name} увеличено на {applet.count}")
@@ -100,6 +93,10 @@ def edit_applet(applet_id):
                 else:
                     flash('Товар не найден в инвентаре', 'error')
                     logging.warning(f"Не удалось изменить статус приложения ID {applet_id}: товар не найден")
+            else:
+                applet.status = new_status
+                flash('Заявка возврата изменила статус на "не принято"', category='success')
+                logging.info(f"Заявка возврата изменила статус на 'не принято'")
             db.session.commit()
             logging.info(f"Статус приложения изменен: ID {applet_id}, новый статус: {new_status}")
     return redirect('/admin/get_user_applet')

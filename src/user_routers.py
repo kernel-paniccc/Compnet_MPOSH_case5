@@ -13,6 +13,36 @@ def main():
     logging.info(f"{current_user.username} зашел на главную страницу.")
     return render_template("index.html", username=current_user.username)
 
+@app.route('/my_inventory', methods=['GET'])
+@login_required
+def my_inventory():
+    try:
+        id = current_user.id
+        good_applications = Aplications.query.filter_by(user_id=id).all()
+        applet = [app for app in good_applications if app.status == "accepted"]
+        logging.info(f"Пользователь {current_user.username} просмотрел свой инвентарь.")
+    except Exception as e:
+        applet = []
+        logging.error(f"Ошибка при получении инвентаря для пользователя {current_user.username}: {e}")
+    return render_template("my_inventory.html", username=current_user.username, aplications=applet, items=InventoryItem.query.all())
+
+
+@app.route('/return_item/<int:app_id>', methods=['GET', 'POST'])
+@login_required
+def return_item(app_id):
+    applets = Aplications.query.filter_by(id=app_id).all()
+    if applets:
+        applets[0].status = "return"
+        item = InventoryItem.query.filter_by(id=applets[0].item_id).first()
+        item.quantity += applets[0].count
+        db.session.commit()
+        logging.info(f"{current_user.username} вернул инвентарный элемент {app_id}")
+        flash(f'Вы вернули {applets[0].count} элемента {item.name}', 'success')
+    else:
+        logging.warning(f"Попытка вернуть инвентарный элемент не удалась: ID {app_id} не найден")
+        flash('Запись не найдена', 'error')
+    return redirect('/my_inventory')
+
 @app.route('/account', methods=['GET'])
 @login_required
 def account():

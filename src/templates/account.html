@@ -34,6 +34,7 @@
                         <td
                             {% if app.status == 'not accepted' %}style="color: red;"
                             {% elif app.status == 'accepted' %}style="color: lime;"
+                            {% elif app.status == 'return' %}style="color: cornflowerblue;"
                             {% endif %}>
                             {{ app.status }}
                         </td>
