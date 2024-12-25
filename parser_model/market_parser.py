@@ -1,10 +1,11 @@
 import undetected_chromedriver as uc
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-import time
+import time, re
 
 
-def get_products_links(item_name):
+def get_products_links(item_name, price) -> list:
+    price = int(price)
     driver = uc.Chrome()
     driver.implicitly_wait(5)
 
@@ -19,13 +20,14 @@ def get_products_links(item_name):
     find_input.send_keys(Keys.ENTER)
     time.sleep(2)
 
-    # current_url = f'{driver.current_url}&sorting=rating'
-    # driver.get(url=current_url)
+    driver.get(url=driver.current_url)
     time.sleep(2)
 
     try:
         products_links = driver.find_elements(By.CLASS_NAME, 'tile-clickable-element')
         products_links = [product.get_attribute('href') for product in products_links]
+        if None in products_links:
+            products_links = []
 
         print('[+] Ссылки на товары собраны!')
     except:

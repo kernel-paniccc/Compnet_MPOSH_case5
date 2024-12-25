@@ -130,10 +130,11 @@
                             </div>
                         </div>
 
-                        <!-- Форма для удаления задачи -->
                         <form action="/buy/delete/{{ task.id }}" method="POST" style="display:inline;">
                             <button type="submit" class="btn btn-danger btn-sm">Удалить</button>
                         </form>
+
+                        <a href="/buy/get_links/{{ task.name }}/{{ task.price}}" class="btn btn-info btn-sm">Ссылки</a>
                     </td>
                 </tr>
                 {% endfor %}

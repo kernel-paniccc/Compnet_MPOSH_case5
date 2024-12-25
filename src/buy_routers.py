@@ -2,6 +2,7 @@ from flask import render_template, request, redirect, url_for
 from flask_login import login_required
 from src.models import Task, admin_required
 from src import db, app
+from parser_model.market_parser import get_products_links
 import logging
 
 @app.route('/buy')
@@ -11,6 +12,15 @@ def index():
     tasks = Task.query.all()
     logging.info("Загружен список задач")
     return render_template('buy.html', tasks=tasks)
+
+@app.route('/buy/get_links/<name>/<price>', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def get_link(name, price):
+    links = get_products_links(name, price)
+    links = list(set(links))
+    print(links)
+    return render_template('links.html', links=links, name=name)
 
 
 @app.route('/buy/add', methods=['POST'])

@@ -1,6 +1,6 @@
 from functools import wraps
 
-from flask import flash, redirect
+from flask import redirect
 from flask_login import UserMixin, current_user
 from src import db, manager
 
@@ -44,7 +44,7 @@ class Task(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
-    price = db.Column(db.Float, nullable=False)
+    price = db.Column(db.Integer, nullable=False)
     supplier = db.Column(db.String(100), nullable=False)
 
 # class MyModelView(ModelView):
