@@ -1,6 +1,7 @@
 import undetected_chromedriver as uc
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from parser_model.func import collect_product_info
 import time, re
 
 
@@ -33,6 +34,21 @@ def get_products_links(item_name, price) -> list:
     except:
         print('[!] Что-то сломалось при сборе ссылок на товары!')
 
+    clear_links = []
+
+    for link in products_links:
+        data = collect_product_info(driver=driver, url=link)
+        prise = data['product_discount_price']
+        clear_prise = str(prise).replace('\u2009', '').replace('₽', '').strip()
+        if int(clear_prise) < price:
+            clear_links.append(link)
+        if len(clear_links) == 1:
+            break
+
     driver.close()
     driver.quit()
-    return products_links
+    return clear_links
+
+if __name__ == '__main__':
+    data = get_products_links('iphone 12', 60000)
+    print(data)
