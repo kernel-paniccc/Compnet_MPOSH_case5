@@ -1,8 +1,9 @@
-from flask import render_template, request, redirect, url_for
+from flask import render_template, request, redirect, url_for, flash
 from flask_login import login_required
 from src.models import Task, admin_required
 from src import db, app
 from parser_model.market_parser import get_products_links
+from src.bitrix import create_order_in_bitrix
 import logging
 
 @app.route('/buy')
@@ -13,15 +14,32 @@ def index():
     logging.info("Загружен список задач")
     return render_template('buy.html', tasks=tasks)
 
-@app.route('/buy/get_links/<name>/<price>', methods=['GET', 'POST'])
+
+# @app.route('/buy/get_links/<name>/<price>', methods=['GET', 'POST'])
+# @login_required
+# @admin_required
+# def get_link(name, price):
+#     links = get_products_links(name, price)
+#     links = list(set(links))
+#     print(links)
+#     return render_template('links.html', links=links, name=name)
+
+
+@app.route('/buy/bitrix/<task_id>', methods=['GET', 'POST'])
 @login_required
 @admin_required
-def get_link(name, price):
-    links = get_products_links(name, price)
-    links = list(set(links))
-    print(links)
-    return render_template('links.html', links=links, name=name)
-
+def bitrix(task_id):
+    task = Task.query.get(task_id)
+    name = task.name
+    quantity = task.quantity
+    price = task.price
+    supplier = task
+    response = create_order_in_bitrix(str(name), int(quantity), int(price), str(supplier))
+    if response == 200:
+        flash('Заказ успешно создан', category='success')
+    else:
+        flash('Ошибка при создании заказа', category='error')
+    return redirect('/buy')
 
 @app.route('/buy/add', methods=['POST'])
 @login_required

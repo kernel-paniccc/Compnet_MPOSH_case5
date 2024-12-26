@@ -1,5 +1,5 @@
 from src import app
 
-print('http://127.0.0.1:8085')
 if __name__ == "__main__":
-    app.run(use_reloader=True, port=8085)
+    print('http://127.0.0.1:7777\nCRM: https://b24-nvmjfa.bitrix24.ru/crm/catalog/')
+    app.run(use_reloader=True, port=7777)

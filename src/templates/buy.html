@@ -14,6 +14,23 @@
             background-color: #2f2f2f ; /* Темный фон */
             color: #ffffff; /* Белый текст */
         }
+        .flash {padding: 10px;}
+
+        .flash.success {
+            color: #00f045;
+            font-family: 'Verdana';
+            -moz-text-shadow:0 0 20px #00f045;
+            -webkit-text-shadow:0 0 20px #00f045;
+            text-shadow:0 0 20px #00f045;
+        }
+        .flash.error {
+            color: #cb1300;
+            font-family: 'Verdana';
+            -moz-text-shadow:0 0 20px #cb1300;
+            -webkit-text-shadow:0 0 20px #cb1300;
+            text-shadow:0 0 20px #cb1300;
+
+        }
         .table {
             background-color: #1e1e1e; /* Темный фон таблицы */
         }
@@ -134,7 +151,7 @@
                             <button type="submit" class="btn btn-danger btn-sm">Удалить</button>
                         </form>
 
-                        <a href="/buy/get_links/{{ task.name }}/{{ task.price}}" class="btn btn-info btn-sm">Ссылки</a>
+                        <a href="/buy/bitrix/{{ task.id }}" class="btn btn-info btn-sm">Отправить в Bitrix</a>
                     </td>
                 </tr>
                 {% endfor %}
@@ -147,7 +164,11 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-    <div class="container mt-5 text-center">
+          <div style="position: absolute; top: 10px; left: 10px;">
+    <button onclick="window.history.back();" class="btn btn-dark btn-sm" style="color: aquamarine; border: 3px solid aquamarine; font-family: 'Archivo Black';">Back</button>
+</div>
+
+        <div class="container mt-5 text-center">
         <div class="row justify-content-center">
         <div class="col-md-6">
     {% for cat, msg in get_flashed_messages(True) %}
@@ -157,10 +178,14 @@
     </div>
 </div>
 
-          <div style="position: absolute; top: 10px; left: 10px;">
-    <button onclick="window.history.back();" class="btn btn-dark btn-sm" style="color: aquamarine; border: 3px solid aquamarine; font-family: 'Archivo Black';">Back</button>
-</div>
-
-    <script src="../static/script_for_flash.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var popup = document.getElementById('popup');
+            popup.style.display = 'block';
+            setTimeout(function() {
+                popup.style.display = 'none';
+            }, 2000);
+        });
+    </script>
 </body>
 </html>
