@@ -2,7 +2,6 @@ from flask import render_template, request, redirect, url_for, flash
 from flask_login import login_required
 from src.models import Task, admin_required
 from src import db, app
-from parser_model.market_parser import get_products_links
 from src.bitrix import create_order_in_bitrix
 import logging
 

@@ -31,7 +31,9 @@ manager.login_view = 'login'
 
 migrate = Migrate(app, db)
 
-from src import models, user_routers, buy_routers, admin_routers
+from src import models
+from src.routers import admin_routers, buy_routers, user_routers
+
 
 @app.before_request
 def create_tables():
