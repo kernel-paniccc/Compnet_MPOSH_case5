@@ -9,7 +9,7 @@ import logging, base64, os
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s - %(levelname)s - %(message)s',
                     handlers=[
-                        logging.FileHandler("src/logs/app.log"),
+                        logging.FileHandler("app.log"),
                         logging.StreamHandler()
                     ])
 log = logging.getLogger('werkzeug')

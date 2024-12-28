@@ -144,5 +144,5 @@ def edit_item(item_id):
 @login_required
 @admin_required
 def get_logs():
-    return send_file('../logs/app.log', as_attachment=True)
+    return send_file('../../app.log', as_attachment=True)
 
