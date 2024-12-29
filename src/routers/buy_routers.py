@@ -32,7 +32,7 @@ def bitrix(task_id):
     name = task.name
     quantity = task.quantity
     price = task.price
-    supplier = task
+    supplier = task.supplier
     response = create_order_in_bitrix(str(name), int(quantity), int(price), str(supplier))
     if response == 200:
         flash('Заказ успешно создан', category='success')
