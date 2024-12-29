@@ -93,7 +93,8 @@ def edit_task(task_id):
                 return redirect(url_for('edit_task', task_id=task_id))
 
             db.session.commit()
-            log_to_db(f"Задача отредактирована: {task_to_edit.name}").info(f"Задача отредактирована: {task_to_edit.name}")
+            flash('Задача отредактирована', category='success')
+            log_to_db(f"Задача отредактирована: {task_to_edit.name}")
         else:
             log_to_db(f"Попытка редактировать несуществующую задачу с ID: {task_id}")
         return redirect(url_for('index'))

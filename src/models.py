@@ -63,6 +63,8 @@ def log_to_db(message):
     db.session.add(log_entry)
     db.session.commit()
 
+
+### Дефолтная админка фласка
 # class MyModelView(ModelView):
 #     def is_accessible(self):
 #         return current_user.is_authenticated and current_user.is_admin()

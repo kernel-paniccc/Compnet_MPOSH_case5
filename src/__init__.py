@@ -1,5 +1,3 @@
-import logging
-
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
@@ -8,14 +6,9 @@ from flask_migrate import Migrate
 from dotenv import load_dotenv
 import base64, os
 
-from ngrok import ngrok
-
 load_dotenv()
 
 app = Flask(__name__)
-
-logging.basicConfig(level=logging.INFO)
-listener = ngrok.werkzeug_develop()
 
 app.secret_key = base64.b64encode(str(os.getenv("KEY")).encode()).decode()
 
