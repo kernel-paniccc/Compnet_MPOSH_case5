@@ -10,10 +10,10 @@
         </div>
 
         <div class="col-auto">
-            <a href="/logout" style="color: aquamarine;border: 3px solid aquamarine;font-family:'Archivo Black';"
+            <a href="/logout" style="color: aquamarine;border: 3px solid aquamarine;font-family:'Cascadia Code';"
                role="button" class="btn btn-sm btn-dark logoutbtn">
                 <div class="main_text">
-                    Logout
+                    выход
                 </div>
             </a>
         </div>
@@ -24,11 +24,12 @@
     <div class="row align-items-start">
         <div class="row gy-4">
             <h1 style="font-size: 70px" class="main_text">
-                Sport inventory app
+                управление спортивным инвентарем
             </h1>
         </div>
     </div>
 </div>
+<br><br>
 
 <div class="container-fluid text-center">
     <div class="row text-justify-center">
@@ -36,7 +37,7 @@
             <br>
             <div class="d-grid gap-2">
                 <a class="btn btn-dark" style="color: aquamarine; border: 3px solid aquamarine;
-                    font-family: 'Archivo Black';" href="/applications" role="button">make application</a>
+                    font-family: 'Cascadia Code';" href="/applications" role="button">создать заявку</a>
             </div>
         </div>
     </div>
@@ -48,7 +49,7 @@
             <br>
             <div class="d-grid gap-2">
                 <a class="btn btn-dark" style="color: aquamarine; border: 3px solid aquamarine;
-                    font-family: 'Archivo Black';" href="{{ url_for('account', username=name) }}" role="button">my application</a>
+                    font-family: 'Cascadia Code';" href="{{ url_for('account', username=name) }}" role="button">мои заявки</a>
             </div>
         </div>
     </div>
@@ -60,7 +61,7 @@
             <br>
             <div class="d-grid gap-2">
                 <a class="btn btn-dark" style="color: aquamarine; border: 3px solid aquamarine;
-                    font-family: 'Archivo Black';" href="{{ url_for('my_inventory') }}" role="button">my inventory</a>
+                    font-family: 'Cascadia Code';" href="{{ url_for('my_inventory') }}" role="button">мой инвентарь</a>
             </div>
         </div>
     </div>

@@ -1,0 +1,117 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+<style>@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Pixelify+Sans:wght@400..700&family=Press+Start+2P&display=swap');
+</style>
+
+<div class="container-fluid text-center">
+      <div class="row align-items-start">
+          <div class="row gy-4">
+              <h1 style="font-size: 70px" class="main_text">
+                  создание отчета
+              </h1>
+          </div>
+      </div>
+  </div>
+
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header text-center">
+                   <h3 class="main_text">
+                  поиск по дате
+                   </h3>
+                </div>
+                <div class="card-body">
+                    <form action="" method="POST">
+                        <div class="form-group">
+                            <label for="start_date" style="color: aquamarine;"><b>начальная дята</b></label>
+                            <input type="date" id="start_date" name="start_date" class="form-control" required>
+                        </div>
+                        <br>
+                        <div class="form-group">
+                            <label for="end_date" style="color: aquamarine;"><b>конечная дата</b></label>
+                            <input type="date" id="end_date" name="end_date" class="form-control" required>
+                        </div>
+                        <br>
+                        <div class="container text-center">
+                        <button type="submit" style=" --bs-btn-padding-y: 0.4rem; --bs-btn-padding-x: 6rem; --bs-btn-font-size: 1rem;
+                      color: aquamarine; border: 3px solid aquamarine; font-family:'Cascadia Code';" class="btn btn-dark">
+                            найти
+                        </button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div>
+
+
+    <div class="container-fluid mt-1">
+    <div class="row justify-content-center">
+        <div class="col-6">
+            <br><br>
+            <form action="/log/download_logs" method="post">
+            <div class="container-fluid text-center">
+              <div class="row text-justify-center">
+                  <div class="col-md-10 offset-md-1">
+                      <br>
+                      <div class="d-grid gap-2">
+                          <button type="submit" class="btn btn-dark" style="color: aquamarine; border: 3px solid aquamarine;
+                            font-family: 'Cascadia Code';" role="button">создать отчет</button>
+                      </div>
+                  </div>
+              </div>
+            </div>
+                <br><br>
+            <table class="table table-borderless">
+                <thead>
+                    <tr>
+                        <th class="main_text" style="color: aquamarine" scope="col"><h3>Сообщение</h3></th>
+                        <th class="main_text" style="color: aquamarine" scope="col"><h3>Дата</h3></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for log in logs%}
+                    <tr>
+                        {% for log in logs %}
+                <tr>
+                    <td>{{ log.description }}</td>
+                    <td>{{ log.created_at }}</td>
+                    <td>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" name="log_ids" value="{{ log.id }}">
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+    </form>
+        </div>
+    </div>
+</div>
+
+
+    <div class="container mt-5 text-center">
+        <div class="row justify-content-center">
+        <div class="col-md-6">
+    {% for cat, msg in get_flashed_messages(True) %}
+        <div id ="popup" class="flash {{cat}}"><h3><b>{{msg}}</b></h3></div>
+    {% endfor %}
+        </div>
+    </div>
+</div>
+</div>
+
+<script src="../static/script_for_flash.js"></script>
+
+{% endblock %}

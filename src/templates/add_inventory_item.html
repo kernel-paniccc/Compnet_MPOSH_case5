@@ -11,23 +11,23 @@
             <div class="card">
                 <div class="card-header text-center">
                    <h1 class="main_text">
-                  Add inventory
+                  Добавить предмет
                    </h1>
                 </div>
                 <div class="card-body">
                     <form action="" method="POST">
                         <div class="form-group">
-                            <label for="name" style="color: aquamarine;"><b>name</b></label>
+                            <label for="name" style="color: aquamarine;"><b>название</b></label>
                             <input type="text" id="name" name="name" class="form-control" required>
                         </div>
                         <br>
                         <div class="form-group">
-                            <label for="quantity" style="color: aquamarine;"><b>quantity</b></label>
+                            <label for="quantity" style="color: aquamarine;"><b>количество</b></label>
                             <input type="number" id="quantity" name="quantity" class="form-control" required>
                         </div>
                         <br>
                         <div class="form-group">
-                            <label for="status" style="color: aquamarine;"><b>status</b></label>
+                            <label for="status" style="color: aquamarine;"><b>статус</b></label>
                             <select class="form-select" aria-label="Default select example" name="status">
                                 <option value="new">Новый</option>
                                 <option value="used">Использованный</option>
@@ -37,8 +37,8 @@
                         <br>
                         <div class="container text-center">
                         <button type="submit" style=" --bs-btn-padding-y: 0.4rem; --bs-btn-padding-x: 6rem; --bs-btn-font-size: 1rem;
-                      color: aquamarine; border: 3px solid aquamarine; font-family:'Archivo Black';" class="btn btn-dark">
-                            submit
+                      color: aquamarine; border: 3px solid aquamarine; font-family:'Cascadia Code';" class="btn btn-dark">
+                            добавить
                         </button>
                         </div>
 
@@ -59,6 +59,8 @@
         </div>
     </div>
 </div>
+</div>
 
-    <script src="../static/script_for_flash.js"></script>
+<script src="../static/script_for_flash.js"></script>
+
 {% endblock %}

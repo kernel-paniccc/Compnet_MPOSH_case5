@@ -1,8 +1,7 @@
 from flask import render_template, request, redirect, flash, send_file
 from flask_login import login_required
-from src.models import Aplications, InventoryItem, admin_required
+from src.models import Aplications, InventoryItem, admin_required, log_to_db
 from src import app, db
-import logging
 
 @app.route('/admin', methods=['GET', 'POST'])
 @login_required
@@ -30,7 +29,7 @@ def add_inventory_item():
         new_item = InventoryItem(name=name, quantity=quantity, status=status)
         db.session.add(new_item)
         db.session.commit()
-        logging.info(f"Добавлен инвентарный элемент: {name}, количество: {quantity}, статус: {status}")
+        log_to_db(f"Добавлен инвентарный элемент: {name}, количество: {quantity}, статус: {status}")
         flash("Инвентарь добавлен", category='success')
     return render_template('add_inventory_item.html')
 
@@ -51,10 +50,10 @@ def delited_applet(applet_id):
     if item:
         db.session.delete(item)
         db.session.commit()
-        logging.info(f"Запись приложения удалена: ID {applet_id}")
+        log_to_db(f"Запись приложения удалена: ID {applet_id}")
         flash('Запись удалена', 'success')
     else:
-        logging.warning(f"Попытка удалить запись приложения не удалась: ID {applet_id} не найден")
+        log_to_db(f"Попытка удалить запись приложения не удалась: ID {applet_id} не найден")
         flash('Запись не найдена', 'error')
     return redirect('/admin/get_user_applet')
 
@@ -65,7 +64,7 @@ def delited_applet(applet_id):
 def edit_applet(applet_id):
     applet = Aplications.query.get(applet_id)
     if not applet:
-        logging.warning(f"Попытка редактирования статуса приложения не удалась: ID {applet_id} не найден")
+        log_to_db(f"Попытка редактирования статуса приложения не удалась: ID {applet_id} не найден")
         flash('Приложение не найдено', 'error')
         return redirect('/admin/all_applet')
     if request.method == 'POST':
@@ -75,30 +74,30 @@ def edit_applet(applet_id):
             if new_status == 'not accepted' and applet.status !='return':
                 if item:
                     item.quantity += applet.count
-                    logging.info(f"Количество для {item.name} увеличено на {applet.count}")
+                    log_to_db(f"Количество для {item.name} увеличено на {applet.count}")
                     flash(f'Количество для {item.name} увеличено на {applet.count}', 'success')
                 applet.status = new_status
             elif new_status == 'accepted':
                 if item:
                     if item.quantity >= applet.count:
                         item.quantity -= applet.count
-                        logging.info(f"Количество для {item.name} уменьшено на {applet.count}")
+                        log_to_db(f"Количество для {item.name} уменьшено на {applet.count}")
                         flash(f'Количество для {item.name} уменьшено на {applet.count}', 'success')
                         applet.status = new_status
                     else:
                         flash(f'Недостаточно количества для {item.name}', 'error')
-                        logging.warning(
+                        log_to_db(
                             f"Не удалось изменить статус приложения ID {applet_id}: недостаточно количества для {item.name}")
                         return redirect('/admin/get_user_applet')
                 else:
                     flash('Товар не найден в инвентаре', 'error')
-                    logging.warning(f"Не удалось изменить статус приложения ID {applet_id}: товар не найден")
+                    log_to_db(f"Не удалось изменить статус приложения ID {applet_id}: товар не найден")
             else:
                 applet.status = new_status
                 flash('Заявка возврата изменила статус на "не принято"', category='success')
-                logging.info(f"Заявка возврата изменила статус на 'не принято'")
+                log_to_db(f"Заявка возврата изменила статус на 'не принято'")
             db.session.commit()
-            logging.info(f"Статус приложения изменен: ID {applet_id}, новый статус: {new_status}")
+            log_to_db(f"Статус приложения изменен: ID {applet_id}, новый статус: {new_status}")
     return redirect('/admin/get_user_applet')
 
 
@@ -113,10 +112,10 @@ def delited(item_id):
             db.session.delete(applet)
         db.session.delete(item)
         db.session.commit()
-        logging.info(f"Запись инвентарного элемента удалена: ID {item_id}")
+        log_to_db(f"Запись инвентарного элемента удалена: ID {item_id}")
         flash('Запись удалена', 'success')
     else:
-        logging.warning(f"Попытка удалить инвентарный элемент не удалась: ID {item_id} не найден")
+        log_to_db(f"Попытка удалить инвентарный элемент не удалась: ID {item_id} не найден")
         flash('Запись не найдена', 'error')
     return redirect('/admin/all_item')
 
@@ -126,7 +125,7 @@ def delited(item_id):
 def edit_item(item_id):
     item = InventoryItem.query.get(item_id)
     if not item:
-        logging.warning(f"Попытка редактирования инвентарного элемента не удалась: ID {item_id} не найден")
+        log_to_db(f"Попытка редактирования инвентарного элемента не удалась: ID {item_id} не найден")
         return redirect('/admin')
 
     if request.method == 'POST':
@@ -135,7 +134,7 @@ def edit_item(item_id):
         item.quantity = request.form['quantity']
         item.status = request.form['status']
         db.session.commit()
-        logging.info(
+        log_to_db(
             f"Данные инвентарного элемента изменены: ID {item_id}, старое имя: {old_name}, новое имя: {item.name}")
 
     return redirect('/admin/all_item')
@@ -144,5 +143,5 @@ def edit_item(item_id):
 @login_required
 @admin_required
 def get_logs():
-    return send_file('../../app.log', as_attachment=True)
+    return redirect('/log')
 

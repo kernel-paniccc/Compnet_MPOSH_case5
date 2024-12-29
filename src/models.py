@@ -47,6 +47,22 @@ class Task(db.Model):
     price = db.Column(db.Integer, nullable=False)
     supplier = db.Column(db.String(100), nullable=False)
 
+
+class Log(db.Model):
+    __tablename__ = 'logs'
+
+    id = db.Column(db.Integer, primary_key=True)
+    description = db.Column(db.String(1000), nullable=False)
+    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+
+    def __repr__(self):
+        return f'<Log {self.id}: {self.description}>'
+
+def log_to_db(message):
+    log_entry = Log(description=message)
+    db.session.add(log_entry)
+    db.session.commit()
+
 # class MyModelView(ModelView):
 #     def is_accessible(self):
 #         return current_user.is_authenticated and current_user.is_admin()

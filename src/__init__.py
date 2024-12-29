@@ -1,22 +1,21 @@
+import logging
+
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
 
 from dotenv import load_dotenv
-import logging, base64, os
+import base64, os
 
-logging.basicConfig(level=logging.INFO,
-                    format='%(asctime)s - %(levelname)s - %(message)s',
-                    handlers=[
-                        logging.FileHandler("app.log"),
-                        logging.StreamHandler()
-                    ])
-log = logging.getLogger('werkzeug')
-log.setLevel(logging.ERROR)
+from ngrok import ngrok
+
 load_dotenv()
 
 app = Flask(__name__)
+
+logging.basicConfig(level=logging.INFO)
+listener = ngrok.werkzeug_develop()
 
 app.secret_key = base64.b64encode(str(os.getenv("KEY")).encode()).decode()
 
@@ -32,7 +31,7 @@ manager.login_view = 'login'
 migrate = Migrate(app, db)
 
 from src import models
-from src.routers import admin_routers, buy_routers, user_routers
+from src.routers import admin_routers, buy_routers, user_routers, log_routers
 
 
 @app.before_request
