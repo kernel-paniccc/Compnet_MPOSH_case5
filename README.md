@@ -103,7 +103,7 @@ docker-compose build
 docker-compose up
 ```
 
-### После этого будет запущено само web приложение и Nginx (port:443)
+### После этого будет запущено само web приложение и Nginx (port:80)
 
 
 
