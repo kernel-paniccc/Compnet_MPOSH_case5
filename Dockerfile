@@ -14,5 +14,4 @@ COPY starter.py ./
 
 EXPOSE 8081
 
-# Запускаем приложение
-CMD ["python", "starter.py"]
+CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:8081", "starter:app"]
