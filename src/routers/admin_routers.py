@@ -11,6 +11,16 @@ def admin_panel():
     return render_template('admin.html', reports=Reports)
 
 
+@app.route('/admin/del_report/<int:report_id>', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def del_report(report_id):
+    report = ReturnAplication.query.get(report_id)
+    db.session.delete(report)
+    db.session.commit()
+    return redirect('/admin')
+
+
 @app.route('/admin/get_user_applet', methods=['GET', 'POST'])
 @login_required
 @admin_required

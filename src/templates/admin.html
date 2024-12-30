@@ -128,6 +128,11 @@
                             <td>{{ report.quantity}}</td>
                             <td>{{ report.item_id}}</td>
                             <td>{{ report.user_id}}</td>
+                            <td>
+                            <a  type="button" class="btn-close" aria-label="Close"
+                                href="{{ url_for('del_report', report_id=report.id) }}">
+                            </a>
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>
