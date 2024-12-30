@@ -44,5 +44,3 @@ def download_logs():
     output.seek(0)
     return send_file(output, as_attachment=True, download_name='selected_logs.csv', mimetype='text/csv')
 
-if __name__ == '__main__':
-    app.run(debug=True, use_reloader=True)
