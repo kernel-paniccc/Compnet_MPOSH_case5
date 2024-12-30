@@ -19,7 +19,7 @@
             <table class="table table-borderless">
                 <thead>
                     <tr>
-                        <th class="main_text" style="color: aquamarine" scope="col"><h3>ID предмета</h3></th>
+                        <th class="main_text" style="color: aquamarine" scope="col"><h3>ID записи</h3></th>
                         <th class="main_text" style="color: aquamarine" scope="col"><h3>Название предмета</h3></th>
                         <th class="main_text" style="color: aquamarine" scope="col"><h3>Кол-во</h3></th>
                     </tr>
@@ -27,7 +27,7 @@
                 <tbody>
                     {% for app in aplications %}
                     <tr>
-                        <td>{{ app.item_id }}</td>
+                        <td>{{ app.id }}</td>
                         <td>
                         {% for item in items %}
                             {% if item.id == app.item_id %}
@@ -46,6 +46,33 @@
                     {% endfor %}
                 </tbody>
             </table>
+        </div>
+    </div>
+</div>
+
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header text-center">
+                </div>
+                <div class="card-body">
+                    <form action="" method="POST">
+                        <div class="form-group">
+                            <label for="app_id" style="color: aquamarine;"><b>Введите id записи</b></label>
+                            <input type="number" id="app_id" name="app_id" class="form-control" required>
+                        </div>
+                        <br>
+                        <div class="container text-center">
+                        <button type="submit" style=" --bs-btn-padding-y: 0.4rem; --bs-btn-padding-x: 6rem; --bs-btn-font-size: 1rem;
+                      color: aquamarine; border: 3px solid aquamarine; font-family:'Cascadia Code';" class="btn btn-dark">
+                            отправить заявку о поломке
+                        </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 </div>

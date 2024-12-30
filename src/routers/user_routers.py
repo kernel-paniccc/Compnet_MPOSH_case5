@@ -1,8 +1,8 @@
-from flask import request, render_template, redirect, flash, session
+from flask import request, render_template, redirect, flash, session, jsonify
 from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.security import check_password_hash, generate_password_hash
 from src import app, db
-from src.models import User, InventoryItem, Aplications, log_to_db
+from src.models import User, InventoryItem, Aplications, log_to_db, ReturnAplication
 from sqlalchemy.exc import IntegrityError
 
 
@@ -12,17 +12,45 @@ def main():
     log_to_db(f"{current_user.username} зашел на главную страницу.")
     return render_template("index.html", username=current_user.username)
 
-@app.route('/my_inventory', methods=['GET'])
+
+@app.route('/my_inventory', methods=['GET', 'POST'])
 @login_required
 def my_inventory():
+    applet = []
     try:
         id = current_user.id
         good_applications = Aplications.query.filter_by(user_id=id).all()
         applet = [app for app in good_applications if app.status == "accepted"]
         log_to_db(f"Пользователь {current_user.username} просмотрел свой инвентарь.")
+
+        if request.method == 'POST':
+            applet_id = request.form.get('app_id')
+            if applet_id is not None:
+                try:
+                    applet_id = int(applet_id)
+                    if applet_id in [i.id for i in applet]:
+                        This_applet = Aplications.query.filter_by(id=applet_id).first()
+                        ReturnApplet = ReturnAplication(
+                            user_id=This_applet.user_id,
+                            item_id=This_applet.item_id,
+                            status=This_applet.status,
+                            quantity=This_applet.count,
+                            username=This_applet.name,
+                            item_name=InventoryItem.query.filter_by(id=This_applet.item_id).first().name,
+                        )
+                        db.session.add(ReturnApplet)
+                        db.session.commit()
+                        flash("Ваша заявка принята и будет рассмотрена администратором", 'success')
+                    else:
+                        flash('Некорректный запрос', 'error')
+                except ValueError:
+                    flash('Некорректный ID заявки', 'error')
+            else:
+                flash('ID заявки не указан', 'error')
+
     except Exception as e:
-        applet = []
         log_to_db(f"Ошибка при получении инвентаря для пользователя {current_user.username}: {e}")
+
     return render_template("my_inventory.html", username=current_user.username, aplications=applet, items=InventoryItem.query.all())
 
 
@@ -42,6 +70,7 @@ def return_item(app_id):
         flash('Запись не найдена', 'error')
     return redirect('/my_inventory')
 
+
 @app.route('/account', methods=['GET'])
 @login_required
 def account():
@@ -52,6 +81,7 @@ def account():
         applet = []
         log_to_db(f"Ошибка при получении заявок для пользователя {current_user.username}: {e}")
     return render_template("account.html", username=current_user.username, applications=applet)
+
 
 @app.route('/applications', methods=['GET', 'POST'])
 @login_required
@@ -64,7 +94,7 @@ def main_application():
         if id and item:
             try:
                 count_int = int(count)
-                if 0 < count_int < item.quantity:
+                if 0 < count_int <= item.quantity:
                     status = "not accepted"
                     new_application = Aplications(
                         user_id=current_user.id,
@@ -78,7 +108,7 @@ def main_application():
                     flash("Заявка добавлена", category='success')
                     log_to_db(f"Пользователь {current_user.username} добавил заявку на элемент ID {id} с количеством {count_int}.")
                 else:
-                    flash("Слишком большое значение", category='error')
+                    flash("Ошибка количества инвентаря", category='error')
                     log_to_db(f"Пользователь {current_user.username} попытался добавить заявку с недопустимым количеством: {count}.")
             except ValueError:
                 flash("Некорректное значение для количества", category='error')
@@ -89,6 +119,7 @@ def main_application():
             flash("ID элемента не найден", category='error')
             log_to_db(f"Пользователь {current_user.username} попытался добавить заявку с несуществующим ID элемента: {id}.")
     return render_template('applications.html', items=items)
+
 
 @app.route('/registration', methods=['GET', 'POST'])
 def register():
@@ -123,6 +154,7 @@ def register():
                 log_to_db(f"Попытка регистрации пользователем {username}: имя пользователя уже занято.")
     return render_template("register_page.html")
 
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     session.clear()
@@ -140,6 +172,7 @@ def login():
             flash('Некорректные данные', category='error')
             log_to_db(f"Попытка входа для пользователя {username}: некорректные данные.")
     return render_template('login_page.html')
+
 
 @app.route('/logout', methods=['POST', 'GET'])
 @login_required

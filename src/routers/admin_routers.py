@@ -1,13 +1,14 @@
-from flask import render_template, request, redirect, flash, send_file
+from flask import render_template, request, redirect, flash
 from flask_login import login_required
-from src.models import Aplications, InventoryItem, admin_required, log_to_db
+from src.models import Aplications, InventoryItem, admin_required, log_to_db, ReturnAplication
 from src import app, db
 
 @app.route('/admin', methods=['GET', 'POST'])
 @login_required
 @admin_required
 def admin_panel():
-    return render_template('admin.html')
+    Reports = ReturnAplication.query.all()
+    return render_template('admin.html', reports=Reports)
 
 
 @app.route('/admin/get_user_applet', methods=['GET', 'POST'])
@@ -138,6 +139,7 @@ def edit_item(item_id):
             f"Данные инвентарного элемента изменены: ID {item_id}, старое имя: {old_name}, новое имя: {item.name}")
 
     return redirect('/admin/all_item')
+
 
 @app.route('/admin/get_logs')
 @login_required

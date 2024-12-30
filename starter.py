@@ -5,7 +5,6 @@ import logging
 
 load_dotenv()
 
-#ToDo applet for broken
 #ToDo build docker
 
 def ngrok_run():
