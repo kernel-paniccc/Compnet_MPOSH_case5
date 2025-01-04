@@ -8,6 +8,11 @@ from src import app, db
 @admin_required
 def admin_panel():
     Reports = ReturnAplication.query.all()
+    clear_reports = []
+    for report in Reports:
+        if len([el for el in InventoryItem.query.filter_by(id=report.item_id).all()]) > 0:
+            clear_reports.append(report)
+    Reports = clear_reports
     return render_template('admin.html', reports=Reports)
 
 
@@ -37,11 +42,18 @@ def add_inventory_item():
         name = request.form['name']
         quantity = request.form['quantity']
         status = request.form['status']
-        new_item = InventoryItem(name=name, quantity=quantity, status=status)
-        db.session.add(new_item)
-        db.session.commit()
-        log_to_db(f"Добавлен инвентарный элемент: {name}, количество: {quantity}, статус: {status}")
-        flash("Инвентарь добавлен", category='success')
+        item = InventoryItem.query.filter_by(name=name, status=status).first()
+        if item:
+            item.quantity += int(quantity)
+            db.session.commit()
+            log_to_db(f"Добавлен инвентарный элемент: {name}, количество: {quantity}, статус: {status}")
+            flash("Инвентарь добавлен", category='success')
+        else:
+            new_item = InventoryItem(name=name, quantity=quantity, status=status)
+            db.session.add(new_item)
+            db.session.commit()
+            log_to_db(f"Добавлен инвентарный элемент: {name}, количество: {quantity}, статус: {status}")
+            flash("Инвентарь добавлен", category='success')
     return render_template('add_inventory_item.html')
 
 
