@@ -70,7 +70,6 @@ class Log(db.Model):
 
 def log_to_db(message):
     log_entry = Log(description=message)
-    print(log_entry)
     db.session.add(log_entry)
     db.session.commit()
 
