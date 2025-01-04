@@ -10,8 +10,11 @@ def admin_panel():
     Reports = ReturnAplication.query.all()
     clear_reports = []
     for report in Reports:
-        if len([el for el in InventoryItem.query.filter_by(id=report.item_id).all()]) > 0:
+        if len([el for el in Aplications.query.filter_by(id=report.item_id).all()]) > 0:
             clear_reports.append(report)
+        else:
+            db.session.delete(report)
+            db.session.commit()
     Reports = clear_reports
     return render_template('admin.html', reports=Reports)
 
