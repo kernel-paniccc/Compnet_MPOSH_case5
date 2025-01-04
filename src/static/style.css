@@ -43,8 +43,52 @@ body {
 .flash.error {
     color: #cb1300;
     font-family: 'Verdana';
-    -moz-text-shadow:0 0 20px #cb1300;
-    -webkit-text-shadow:0 0 20px #cb1300;
-    text-shadow:0 0 20px #cb1300;
+    -moz-text-shadow: 0 0 20px #cb1300;
+    -webkit-text-shadow: 0 0 20px #cb1300;
+    text-shadow: 0 0 20px #cb1300;
+}
 
+.btn-yandex {
+    background-color: #1a1a1a;
+    color: #fff;
+    padding: 10px 20px;
+    text-align: left;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center; /* Выравнивание по вертикали */
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 5px;
+     font-family: 'Cascadia Code', monospace;
+    width: 100%;
+     border: none;
+}
+
+.btn-yandex:hover {
+    background-color: #333;
+}
+.yandex-logo {
+    display: inline-flex;
+     justify-content: center;
+     align-items: center;
+     width: 25px;
+    height: 25px;
+    background-color: #ff0000; /* Красный цвет для лого */
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 50%; /* Круг */
+    margin-right: 10px;
+}
+
+.user-icon {
+  display: inline-flex;
+     justify-content: center;
+     align-items: center;
+     width: 25px;
+    height: 25px;
+  background-color: #ddd; /* Светло-серый цвет */
+  border-radius: 50%; /* Круг */
+  margin-left: auto; /* Прижимает иконку к правому краю */
 }

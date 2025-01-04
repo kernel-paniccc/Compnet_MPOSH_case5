@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
 
+from authlib.integrations.flask_client import OAuth
 from dotenv import load_dotenv
 import base64, os
 
@@ -24,6 +25,21 @@ manager.init_app(app)
 manager.login_view = 'login'
 
 migrate = Migrate(app, db)
+
+
+oauth = OAuth(app)
+
+yandex = oauth.register(
+    name='yandex',
+    client_id=os.getenv('YANDEX_CLIENT_ID'),
+    client_secret=os.getenv('YANDEX_CLIENT_SECRET'),
+    access_token_url='https://oauth.yandex.ru/token',
+    access_token_params=None,
+    authorize_url='https://oauth.yandex.ru/authorize',
+    authorize_params=None,
+    api_base_url='https://login.yandex.ru/',
+    client_kwargs={'scope': 'login:email'},
+)
 
 from src import models
 from src.routers import admin_routers, buy_routers, user_routers, log_routers

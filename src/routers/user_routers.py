@@ -1,10 +1,11 @@
-from flask import request, render_template, redirect, flash, session, jsonify
+from flask import request, render_template, redirect, flash, session, jsonify, url_for
 from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.security import check_password_hash, generate_password_hash
-from src import app, db
+from src import app, db, yandex
 from src.models import User, InventoryItem, Aplications, log_to_db, ReturnAplication
 from sqlalchemy.exc import IntegrityError
 
+import requests
 
 @app.route('/', methods=['GET'])
 @login_required
@@ -174,10 +175,65 @@ def login():
     return render_template('login_page.html')
 
 
+
+@app.route('/yandex_login')
+def yandex_login():
+    redirect_uri = url_for('yandex_callback', _external=True)
+    return yandex.authorize_redirect(redirect_uri)
+
+@app.route('/yandex_callback')
+def yandex_callback():
+    token = yandex.authorize_access_token()
+    user_info = get_user_info('yandex', token)
+    return handle_oauth_callback(user_info, 'yandex')
+
+def handle_oauth_callback(user_info, provider_name):
+    if not user_info:
+        flash(f'Ошибка получения информации о пользователе {provider_name}', 'error')
+        return redirect(url_for('login'))
+    email = user_info['default_email']
+    print(email)
+    if not email:
+         flash(f'Не удалось получить email пользователя от {provider_name}. Пожалуйста попробуйте позже.', 'error')
+         return redirect(url_for('login'))
+
+    name = user_info.get('name')
+    if not name:
+        name = f"user_{user_info.get('id', 'unknown')}"
+
+    user = User.query.filter_by(email=email).first()
+    if user:
+        login_user(user)
+        flash(f'Вы успешно авторизовались через {provider_name}!', 'success')
+        return redirect(url_for('main'))
+    else:
+        new_user = User(
+            username=name,
+            email=email,
+            password='None'
+        )
+        db.session.add(new_user)
+        db.session.commit()
+        login_user(new_user)
+        flash(f'Вы успешно авторизовались через {provider_name}', 'success')
+        return redirect(url_for('main'))
+
+def get_user_info(provider, token):
+    if provider == 'yandex':
+       resp = yandex.get('info', token=token)
+       if resp.ok:
+            return resp.json()
+       else:
+            return None
+    else:
+        return None
+
+
 @app.route('/logout', methods=['POST', 'GET'])
 @login_required
 def logout():
     username = current_user.username
     logout_user()
+    session.clear()
     log_to_db(f"Пользователь {username} вышел из системы.")
     return redirect('/login')
