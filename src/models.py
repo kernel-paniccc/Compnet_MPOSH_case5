@@ -10,6 +10,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(128), nullable=False, unique=True)
     password = db.Column(db.String(255), nullable=False)
     role = db.Column(db.String(50), default='user')
+    yandex_access_token = db.Column(db.String(255), nullable=True)
 
     def __repr__(self):
         return f'<User {self.username} (ID: {self.id}, Role: {self.role})>'
@@ -69,6 +70,7 @@ class Log(db.Model):
 
 def log_to_db(message):
     log_entry = Log(description=message)
+    print(log_entry)
     db.session.add(log_entry)
     db.session.commit()
 

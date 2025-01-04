@@ -1,3 +1,5 @@
+import base64
+
 from flask import request, render_template, redirect, flash, session, jsonify, url_for
 from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -5,7 +7,10 @@ from src import app, db, yandex
 from src.models import User, InventoryItem, Aplications, log_to_db, ReturnAplication
 from sqlalchemy.exc import IntegrityError
 
-import requests
+from dotenv import load_dotenv
+import requests, os
+
+load_dotenv()
 
 @app.route('/', methods=['GET'])
 @login_required
@@ -176,47 +181,51 @@ def login():
 
 
 
+
 @app.route('/yandex_login')
 def yandex_login():
     redirect_uri = url_for('yandex_callback', _external=True)
-    return yandex.authorize_redirect(redirect_uri)
+    return yandex.authorize_redirect(redirect_uri, force_confirm=True)
 
 @app.route('/yandex_callback')
 def yandex_callback():
     token = yandex.authorize_access_token()
     user_info = get_user_info('yandex', token)
-    return handle_oauth_callback(user_info, 'yandex')
+    return handle_oauth_callback(user_info, 'yandex', token)
 
-def handle_oauth_callback(user_info, provider_name):
+def handle_oauth_callback(user_info, provider_name, token):
     if not user_info:
         flash(f'Ошибка получения информации о пользователе {provider_name}', 'error')
         return redirect(url_for('login'))
-    email = user_info['default_email']
-    print(email)
-    if not email:
-         flash(f'Не удалось получить email пользователя от {provider_name}. Пожалуйста попробуйте позже.', 'error')
-         return redirect(url_for('login'))
 
-    name = user_info.get('name')
+    email = user_info.get('default_email')
+    if not email:
+        flash(f'Не удалось получить email пользователя от {provider_name}. Пожалуйста попробуйте позже.', 'error')
+        return redirect(url_for('login'))
+
+    name = user_info.get('login')
     if not name:
         name = f"user_{user_info.get('id', 'unknown')}"
-
     user = User.query.filter_by(email=email).first()
     if user:
         login_user(user)
-        flash(f'Вы успешно авторизовались через {provider_name}!', 'success')
+        flash(f'Вы успешно вошли через {provider_name}!', 'success')
+        user.yandex_access_token = token['access_token']
+        db.session.commit()
         return redirect(url_for('main'))
     else:
         new_user = User(
             username=name,
             email=email,
-            password='None'
+            password='None',
+            yandex_access_token=token['access_token']
         )
         db.session.add(new_user)
         db.session.commit()
         login_user(new_user)
-        flash(f'Вы успешно авторизовались через {provider_name}', 'success')
+        flash(f'Вы успешно авторизовались через {provider_name}!', 'success')
         return redirect(url_for('main'))
+
 
 def get_user_info(provider, token):
     if provider == 'yandex':
@@ -228,11 +237,25 @@ def get_user_info(provider, token):
     else:
         return None
 
-
 @app.route('/logout', methods=['POST', 'GET'])
 @login_required
 def logout():
     username = current_user.username
+    token = current_user.yandex_access_token
+    if token:
+         try:
+             data = {
+                 'access_token': token,
+                 'client_id': os.environ.get('YANDEX_CLIENT_ID'),
+                 'client_secret': os.environ.get('YANDEX_CLIENT_SECRET')
+             }
+             response = requests.post('https://oauth.yandex.ru/revoke_token', data=data)
+             current_user.yandex_access_token = None
+             db.session.commit()
+             log_to_db(f"Yandex токен успешно отозван для пользователя {username}.")
+         except requests.exceptions.RequestException as e:
+              log_to_db(f"Ошибка при отзыве токена Yandex для пользователя {username}: {e}")
+              flash("Произошла ошибка при выходе из Yandex", 'error')
     logout_user()
     session.clear()
     log_to_db(f"Пользователь {username} вышел из системы.")
