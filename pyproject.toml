@@ -8,7 +8,6 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.12"
 alembic = "1.13.2"
-beautifulsoup4 = "4.12.3"
 flask = "3.1.0"
 flask-login = "0.6.3"
 flask-sqlalchemy = "3.1.1"
@@ -21,10 +20,12 @@ flask-migrate = "^4.0.7"
 ngrok = "^1.4.0"
 gunicorn = "^23.0.0"
 authlib = "^1.4.0"
+pytest = "^8.3.4"
 
 
 [tool.poetry.group.dev.dependencies]
 undetected-chromedriver = "3.5.5"
+bs4 = "^0.0.2"
 
 [build-system]
 requires = ["poetry-core"]
