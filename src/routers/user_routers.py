@@ -34,21 +34,22 @@ def my_inventory():
                 try:
                     applet_id = int(applet_id)
                     application = Applications.query.get_or_404(applet_id)
-
-                    if application.user_id == current_user.id:
-                        ReturnApplet = ReturnAplication(
-                            application_id=application.id,
-                        )
-                        db.session.add(ReturnApplet)
-                        db.session.commit()
-                        flash("Ваша заявка принята и будет рассмотрена администратором", 'success')
+                    if ReturnAplication.query.filter_by(application_id=application.id).first() is None:
+                        if application.user_id == current_user.id:
+                            ReturnApplet = ReturnAplication(
+                                application_id=application.id,
+                            )
+                            db.session.add(ReturnApplet)
+                            db.session.commit()
+                            flash("Ваша заявка принята и будет рассмотрена администратором", 'success')
+                        else:
+                            flash('Вы не можете вернуть чужой инвентарь', 'error')
                     else:
-                        flash('Некорректный запрос', 'error')
+                        flash(f'Вы уже подавали заявку на возврат для {application.item_name} по ID: {application.id}', 'error')
                 except ValueError:
                     flash('Некорректный ID заявки', 'error')
             else:
                 flash('ID заявки не указан', 'error')
-
     except Exception as e:
         log_to_db(f"Ошибка при получении инвентаря для пользователя {current_user.username}: {e}")
 
