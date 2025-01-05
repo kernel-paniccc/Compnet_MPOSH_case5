@@ -2,7 +2,7 @@ from flask import request, render_template, redirect, flash, session, jsonify, u
 from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.security import check_password_hash, generate_password_hash
 from src import app, db, yandex
-from src.models import User, InventoryItem, Aplications, log_to_db, ReturnAplication
+from src.models import User, InventoryItem, Applications, log_to_db, ReturnAplication
 from sqlalchemy.exc import IntegrityError
 from src.Yandex_OAuth import handle_oauth_callback, get_user_info
 
@@ -24,24 +24,20 @@ def my_inventory():
     applet = []
     try:
         id = current_user.id
-        good_applications = Aplications.query.filter_by(user_id=id).all()
+        good_applications = Applications.query.filter_by(user_id=id).all()
         applet = [app for app in good_applications if app.status == "accepted"]
         log_to_db(f"Пользователь {current_user.username} просмотрел свой инвентарь.")
 
         if request.method == 'POST':
             applet_id = request.form.get('app_id')
-            if applet_id is not None:
+            if applet_id:
                 try:
                     applet_id = int(applet_id)
-                    if applet_id in [i.id for i in applet]:
-                        This_applet = Aplications.query.filter_by(id=applet_id).first()
+                    application = Applications.query.get_or_404(applet_id)
+
+                    if application.user_id == current_user.id:
                         ReturnApplet = ReturnAplication(
-                            user_id=This_applet.user_id,
-                            item_id=This_applet.item_id,
-                            status=This_applet.status,
-                            quantity=This_applet.count,
-                            username=This_applet.name,
-                            item_name=InventoryItem.query.filter_by(id=This_applet.item_id).first().name,
+                            application_id=application.id,
                         )
                         db.session.add(ReturnApplet)
                         db.session.commit()
@@ -62,7 +58,7 @@ def my_inventory():
 @app.route('/return_item/<int:app_id>', methods=['GET', 'POST'])
 @login_required
 def return_item(app_id):
-    applets = Aplications.query.filter_by(id=app_id).all()
+    applets = Applications.query.filter_by(id=app_id).all()
     if applets:
         applets[0].status = "return"
         item = InventoryItem.query.filter_by(id=applets[0].item_id).first()
@@ -80,7 +76,7 @@ def return_item(app_id):
 @login_required
 def account():
     try:
-        applet = Aplications.query.filter_by(user_id=current_user.id).all()
+        applet = Applications.query.filter_by(user_id=current_user.id).all()
         log_to_db(f"Пользователь {current_user.username} просмотрел свои заявки.")
     except Exception as e:
         applet = []
@@ -101,12 +97,13 @@ def main_application():
                 count_int = int(count)
                 if 0 < count_int <= item.quantity:
                     status = "not accepted"
-                    new_application = Aplications(
+                    new_application = Applications(
                         user_id=current_user.id,
                         name=current_user.username,
                         item_id=id,
                         status=status,
-                        count=count_int
+                        count=count_int,
+                        item_name=item.name,
                     )
                     db.session.add(new_application)
                     db.session.commit()

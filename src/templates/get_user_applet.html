@@ -24,7 +24,7 @@
                 <th class="main_text" style="color: aquamarine" scope="col"><h3>Пользователь</h3></th>
                 <th class="main_text" style="color: aquamarine" scope="col"><h3>Кол-во</h3></th>
                 <th class="main_text" style="color: aquamarine" scope="col"><h3>Статус</h3></th>
-                <th class="main_text" style="color: aquamarine" scope="col"><h3>ID предмета</h3></th>
+                <th class="main_text" style="color: aquamarine" scope="col"><h3>Предмет</h3></th>
 
             </tr>
           </thead>
@@ -44,7 +44,7 @@
                             {{ app.status }}
                         </a>
                     </td>
-                    <td>{{ app.item_id }}</td>
+                    <td>{{ app.item_name }}</td>
                 <td>
                      <button  type="button" class="btn btn-outline-secondary btn-sm" data-toggle="modal" data-target="#editModal{{ app.id }}">
                         <i class="bi bi-pencil"></i>

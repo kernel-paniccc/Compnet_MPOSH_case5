@@ -116,7 +116,7 @@
                         {% for report in reports %}
                         <tr>
                             <td>{{ report.id }}</td>
-                            <td>{{ report.username }}</td>
+                            <td>{{ report.name }}</td>
                             <td
                             {% if report.status == 'not accepted' %}style="color: red;"
                             {% elif report.status == 'accepted' %}style="color: lime;"
@@ -125,7 +125,7 @@
                             {{ report.status }}
                             </td>
                             <td>{{ report.item_name }}</td>
-                            <td>{{ report.quantity}}</td>
+                            <td>{{ report.count}}</td>
                             <td>{{ report.item_id}}</td>
                             <td>{{ report.user_id}}</td>
                             <td>

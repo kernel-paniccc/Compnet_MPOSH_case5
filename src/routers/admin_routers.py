@@ -1,22 +1,29 @@
 from flask import render_template, request, redirect, flash
 from flask_login import login_required
-from src.models import Aplications, InventoryItem, admin_required, log_to_db, ReturnAplication
+from src.models import Applications, InventoryItem, admin_required, log_to_db, ReturnAplication
 from src import app, db
 
 @app.route('/admin', methods=['GET', 'POST'])
 @login_required
 @admin_required
 def admin_panel():
-    Reports = ReturnAplication.query.all()
-    clear_reports = []
-    for report in Reports:
-        if len([el for el in Aplications.query.filter_by(id=report.item_id).all()]) > 0:
-            clear_reports.append(report)
-        else:
-            db.session.delete(report)
-            db.session.commit()
-    Reports = clear_reports
-    return render_template('admin.html', reports=Reports)
+    report_ids_to_check = [report.id for report in ReturnAplication.query.all()]
+    invalid_report_ids = []
+    for report_id in report_ids_to_check:
+        applet = Applications.query.filter_by(id=report_id).first()
+        if not applet:
+            invalid_report_ids.append(report_id)
+    if invalid_report_ids:
+        ReturnAplication.query.filter(ReturnAplication.id.in_(invalid_report_ids)).delete(synchronize_session=False)
+        db.session.commit()
+
+    filtred_reports = []
+    for report in ReturnAplication.query.all():
+        applet = Applications.query.filter_by(id=report.application_id).first()
+        if applet:
+            filtred_reports.append(applet)
+
+    return render_template('admin.html', reports=list(set(filtred_reports)))
 
 
 @app.route('/admin/del_report/<int:report_id>', methods=['GET', 'POST'])
@@ -33,7 +40,7 @@ def del_report(report_id):
 @login_required
 @admin_required
 def get_user_applet():
-    applet = Aplications.query.all()
+    applet = Applications.query.all()
     return render_template('get_user_applet.html', applets=applet)
 
 
@@ -72,7 +79,7 @@ def all_inventory_item():
 @login_required
 @admin_required
 def delited_applet(applet_id):
-    item = Aplications.query.get(applet_id)
+    item = Applications.query.get(applet_id)
     if item:
         db.session.delete(item)
         db.session.commit()
@@ -88,7 +95,7 @@ def delited_applet(applet_id):
 @login_required
 @admin_required
 def edit_applet(applet_id):
-    applet = Aplications.query.get(applet_id)
+    applet = Applications.query.get(applet_id)
     if not applet:
         log_to_db(f"Попытка редактирования статуса приложения не удалась: ID {applet_id} не найден")
         flash('Приложение не найдено', 'error')
@@ -132,7 +139,7 @@ def edit_applet(applet_id):
 @admin_required
 def delited(item_id):
     item = InventoryItem.query.get(item_id)
-    applets = Aplications.query.filter_by(item_id=item_id).all()
+    applets = Applications.query.filter_by(item_id=item_id).all()
     if item:
         for applet in applets:
             db.session.delete(applet)
