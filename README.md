@@ -112,9 +112,7 @@ python starter.py
 > ADMIN_EMAIL
 > ADMIN_PASS
 
-#  Поднятие докер контейнера <picture> <source srcset="https://fonts.gstatic.com/s/e/notoemoji/latest/2699_fe0f/512.webp" type="image/webp">
-<img src="https://fonts.gstatic.com/s/e/notoemoji/latest/2699_fe0f/512.gif" alt="⚙" width="32" height="32"></picture>
-
+#  Поднятие докер контейнера <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/main/Objects/Toolbox.webp" alt="Toolbox" width="25" height="25" />
 ### Важно! <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Symbols/Warning.png" alt="Warning" width="25" height="25" />
 > Убедитесь, что на вашей машине установлен Docker и Docker Compose.
 
