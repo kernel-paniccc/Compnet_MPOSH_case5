@@ -15,7 +15,6 @@ def client():
             yield client
             db.drop_all()
 
-
 def test_main_page_redirect(client):
     response = client.get('/')
     assert response.status_code == 302
