@@ -33,7 +33,7 @@
 - **SQLAlchemy ORM**: для работы с базой данных через объектно-реляционное отображение 
 - **Alembic**: инструмент для управления миграциями базы данных 
 
-### Другие технологии 🛠
+### Другие технологии 
 - **Docker**: система контейнеризации 
 - **Git**: система контроля версий 
 - **Ngrok**: создание временных публичных URL для локального сервера 
@@ -102,9 +102,9 @@ YANDEX_CLIENT_SECRET='YOUR_CLIENT_SECRET'
 ```bash
 python starter.py
 ```
-   ## После чего приложение запустится локально и порт будет прокинут в сеть с помощью Ngrok! 🌐
+   ## После чего приложение запустится локально и порт будет прокинут в сеть с помощью Ngrok! 
 
-### Важно! <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/main/Symbols/Exclamation%20Mark.webp" alt="Exclamation Mark" width="25" height="25" />
+### Важно! <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Symbols/Warning.png" alt="Warning" width="25" height="25" />
 > **Внимание:** После запуска приложения БД создастся автоматически.
 > Администратора необходимо добавить вручную, указав в файле '.env'.
 > Параметры:
@@ -112,9 +112,9 @@ python starter.py
 > ADMIN_EMAIL
 > ADMIN_PASS
 
-#  Поднятие докер контейнера <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Travel%20and%20places/Building%20Construction.png" alt="Building Construction" width="25" height="25" />
+#  Поднятие докер контейнера 
 
-### Важно! <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/main/Symbols/Exclamation%20Mark.webp" alt="Exclamation Mark" width="25" height="25" />
+### Важно! <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Symbols/Warning.png" alt="Warning" width="25" height="25" />
 > Убедитесь, что на вашей машине установлен Docker и Docker Compose.
 
 Как только вы клонировали репозиторий и назначили переменные окружения, можно перейти к деплою.
