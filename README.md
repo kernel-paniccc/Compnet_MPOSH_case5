@@ -45,14 +45,6 @@
 
 ## Запуск и установка <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Travel%20and%20places/Rocket.png" alt="Rocket" width="25" height="25" />
 
-## Тестирование <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/main/Objects/Bar%20Chart.webp" alt="Bar Chart" width="25" height="25" />
-
-Проект использует pytest для реализации модульного тестирования. Тесты можно найти в `/src/tests` 
-
-Для запуска тестов выполните:
-``` 
-pytest 
-```
 ### Локальный запуск
 
 Для локального запуска системы управления спортивным инвентарем выполните следующие шаги:
@@ -111,6 +103,16 @@ python starter.py
 > ADMIN_USERNAME
 > ADMIN_EMAIL
 > ADMIN_PASS
+
+
+## Тестирование <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/main/Objects/Bar%20Chart.webp" alt="Bar Chart" width="25" height="25" />
+
+Проект использует pytest для реализации модульного тестирования. Тесты можно найти в `/src/tests` 
+
+Для запуска тестов выполните:
+``` 
+pytest 
+```
 
 #  Поднятие докер контейнера <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/main/Objects/Toolbox.webp" alt="Toolbox" width="25" height="25" />
 ### Важно! <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Symbols/Warning.png" alt="Warning" width="25" height="25" />
