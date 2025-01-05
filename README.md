@@ -2,7 +2,7 @@
 
 ## [Демо деплой](https://compnet-mposh-case5.onrender.com/)
 
-## Содержание 📚
+## Содержание <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/main/Objects/File%20Folder.webp" alt="File Folder" width="25" height="25" />
 - [Описание](#описание)
 - [Стек технологий](#стек-технологий)
 - [Запуск и установка](#запуск-и-установка)
