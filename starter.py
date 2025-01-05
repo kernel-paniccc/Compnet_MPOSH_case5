@@ -14,4 +14,4 @@ def ngrok_run():
 if __name__ == "__main__":
     #ngrok_run()
     print('CRM: https://b24-nvmjfa.bitrix24.ru/crm/catalog/')
-    app.run(port=8081, host='0.0.0.0', use_reloader=True, debug=True)
+    app.run(port=8081, host='0.0.0.0') #use_reloader=True, debug=True
