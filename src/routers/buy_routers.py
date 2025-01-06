@@ -68,7 +68,7 @@ def delete_task(task_id):
     if task_to_delete:
         db.session.delete(task_to_delete)
         db.session.commit()
-        log_to_db().info(f"Задача удалена: {task_to_delete.name}")
+        log_to_db(f"Задача удалена: {task_to_delete.name}")
     else:
         log_to_db(f"Попытка удалить несуществующую задачу с ID: {task_id}")
 
