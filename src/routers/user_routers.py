@@ -139,7 +139,7 @@ def register():
         if password != password_return:
             flash('Пароли не совпадают', category='error')
             log_to_db(f"Попытка регистрации пользователем {username}: пароли не совпадают.")
-        elif "@" not in email:
+        elif ("@" not in email) or User.query.filter_by(email=email).first():
             flash('Неверный адрес почты', category='error')
             log_to_db(f"Попытка регистрации пользователем {username}: неверный адрес электронной почты.")
         else:
