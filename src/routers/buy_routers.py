@@ -68,10 +68,10 @@ def delete_task(task_id):
     if task_to_delete:
         db.session.delete(task_to_delete)
         db.session.commit()
+        flash('Задача удалена', category='success')
         log_to_db(f"Задача удалена: {task_to_delete.name}")
     else:
         log_to_db(f"Попытка удалить несуществующую задачу с ID: {task_id}")
-
     return redirect(url_for('index'))
 
 
