@@ -26,8 +26,8 @@ body {
 
 .main_text{
     color: aquamarine;
-    font-family: 'Cascadia Code';
-    text-shadow: 0 0 10px
+    font-family: 'Bahnschrift', sans-serif;
+    text-shadow: 0 0 10px;
 }
 
 
@@ -35,14 +35,15 @@ body {
 
 .flash.success {
     color: #00f045;
-    font-family: 'Verdana';
+    font-family: 'Verdana', monospace;
     -moz-text-shadow:0 0 20px #00f045;
     -webkit-text-shadow:0 0 20px #00f045;
     text-shadow:0 0 20px #00f045;
 }
+
 .flash.error {
     color: #cb1300;
-    font-family: 'Verdana';
+    font-family: 'Verdana', monospace;
     -moz-text-shadow: 0 0 20px #cb1300;
     -webkit-text-shadow: 0 0 20px #cb1300;
     text-shadow: 0 0 20px #cb1300;
@@ -60,7 +61,7 @@ body {
     margin: 4px 2px;
     cursor: pointer;
     border-radius: 5px;
-     font-family: 'Cascadia Code', monospace;
+     font-family: 'Bahnschrift', sans-serif;
     width: 100%;
      border: none;
 }
