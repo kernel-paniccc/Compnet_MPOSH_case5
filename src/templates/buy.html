@@ -2,14 +2,12 @@
 
 {% block content %}
 <div class="container py-5">
-    <!-- Заголовок -->
     <div class="row mb-5">
         <div class="col-12">
             <h1 class="text-center main_text fw-bold">Планирование и управление закупками</h1>
         </div>
     </div>
 
-    <!-- Форма добавления -->
     <div class="row mb-4">
         <div class="col-12">
             <div class="card shadow-sm">
@@ -41,7 +39,7 @@
                                 </div>
                             </div>
                             <div class="col-md-auto d-flex align-items-center">
-                                <button type="submit" class="btn btn-primary btn-lg px-4">
+                                <button type="submit" class="btn btn-secondary btn-lg px-4">
                                     <i class="fas fa-plus me-2"></i>Добавить
                                 </button>
                             </div>
@@ -76,18 +74,18 @@
                                     <td class="align-middle">{{ task.price }}</td>
                                     <td class="align-middle">{{ task.supplier }}</td>
                                     <td class="text-end">
-                                        <div class="btn-group" role="group">
-                                            <button type="button" class="btn btn-outline-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal{{ task.id }}">
-                                                <i class="fas fa-edit me-1"></i>Изменить
+                                       <div class="btn-group" role="group">
+                                          <button type="button" class="btn btn-success btn-sm rounded-0" data-bs-toggle="modal" data-bs-target="#editModal{{ task.id }}">
+                                            <i class="fas fa-edit me-1"></i>Изменить
+                                          </button>
+                                          <form action="/buy/delete/{{ task.id }}" method="POST">
+                                            <button type="submit" class="btn btn-danger btn-sm rounded-0">
+                                              <i class="fas fa-trash-alt me-1"></i>Удалить
                                             </button>
-                                            <form action="/buy/delete/{{ task.id }}" method="POST" class="d-inline">
-                                                <button type="submit" class="btn btn-outline-danger btn-sm">
-                                                    <i class="fas fa-trash-alt me-1"></i>Удалить
-                                                </button>
-                                            </form>
-                                            <a href="/buy/bitrix/{{ task.id }}" class="btn btn-outline-info btn-sm">
-                                                <i class="fas fa-share me-1"></i>Отправить в Bitrix
-                                            </a>
+                                          </form>
+                                          <a href="/buy/bitrix/{{ task.id }}" class="btn btn-primary btn-sm rounded-0">
+                                            <i class="fas fa-share me-1"></i>Отправить в Bitrix
+                                          </a>
                                         </div>
                                     </td>
                                 </tr>
