@@ -20,10 +20,10 @@ def view_logs():
             end_date = datetime.strptime(end_date, '%Y-%m-%d')
             logs = Log.query.filter(Log.created_at >= start_date, Log.created_at <= end_date).all()
         except ValueError:
-            logs = Log.query.all()  # В случае ошибки, показываем все логи
+            logs = Log.query.all()
             flash('Неверный формат даты. Пожалуйста, используйте YYYY-MM-DD.', 'error')
     else:
-        logs = Log.query.all()
+        logs = []
 
     return render_template('logs_main.html', logs=logs)
 
