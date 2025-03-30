@@ -1,6 +1,5 @@
 # Система управления спортивным инвентарем ️
 
-## [Демо деплой](https://ppo-case.ru/)
 ## [Видеоролик](https://vk.com/video327031277_456239035)
 
 ## Содержание <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/main/Objects/File%20Folder.webp" alt="File Folder" width="25" height="25" />
